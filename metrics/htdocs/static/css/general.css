@@ -1,0 +1,16 @@
+form.horizontal{
+	
+}
+
+form.horizontal label{
+	float: left;
+	margin-right: 10px;
+}
+
+.datepick, select{
+	width:130px;
+}
+
+input[type=text],input[type=submit]{
+	/*vertical-align: top;*/
+}

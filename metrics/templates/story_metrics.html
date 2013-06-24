@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+
+{% block extrahead %}
+
+<script type="text/javascript">
+$(function () {
+	    //$('#datatable').dataTable();
+	    $('.datepick').datepicker({ dateFormat: "dd/mm/yy" });
+	
+	    $('#container').highcharts({
+	        chart: {
+	            plotBackgroundColor: null,
+	            plotBorderWidth: null,
+	            plotShadow: false
+	        },
+	        title: {
+	            text: 'Workstream Share'
+	        },
+	        tooltip: {
+	    	    pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+	        },
+	        plotOptions: {
+	            pie: {
+	                allowPointSelect: true,
+	                cursor: 'pointer',
+	                dataLabels: {
+	                    enabled: true,
+	                    color: '#000000',
+	                    connectorColor: '#000000',
+	                    format: '<b>{point.name}</b>: {point.percentage:.1f} %'
+	                }
+	            }
+	        },
+	        series: [{
+	            type: 'pie',
+	            name: 'Browser share',
+	            data: [
+					{% for key,value in services_share.items %}
+						['{{key}}', {{value}}],
+					{% endfor %}
+	            ]
+	        }]
+	    });
+	
+	
+});
+</script>
+{% endblock %}
+
+{% block content %}
+	<div id="container"></div>
+{% endblock %}
