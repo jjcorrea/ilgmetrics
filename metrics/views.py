@@ -40,8 +40,6 @@ def home_page(request):
     return render_to_response('home.html', {})
 
 def cfd_chart_page(request):
-    from trello import TrelloClient
-    client = TrelloClient(settings.TRELLO_CREDENTIALS.get('api_key'), settings.TRELLO_CREDENTIALS.get('token'))
     graph_data = []
     
     st_in = ''
