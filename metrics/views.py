@@ -45,7 +45,7 @@ def cfd_chart_page(request):
     st_in = ''
     en_in = ''
     tm_in = ''
-    
+    tp_in = ''
     if request.method == 'POST':
         st_in = request.POST['start_datepick']
         en_in = request.POST['end_datepick']
