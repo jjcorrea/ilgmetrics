@@ -64,10 +64,11 @@ MEDIA_URL = ''
 # Don't put anything in this directory yourself; store your static files
 # in apps' "static/" subdirectories and in STATICFILES_DIRS.
 # Example: "/var/www/example.com/static/"
-STATIC_ROOT = '/'
+STATIC_ROOT = ''
 
 # URL prefix for static files.
 # Example: "http://example.com/static/", "http://static.example.com/"
+MEDIA_URL = '/media/'
 STATIC_URL = '/static/'
 
 # Additional locations of static files
@@ -76,10 +77,11 @@ STATICFILES_DIRS = (
     # Always use forward slashes, even on Windows.
     # Don't forget to use absolute paths, not relative paths.
     '%s/htdocs/static/' % PROJECT_PATH,
-    '/app/',
+    os.path.join(os.path.abspath(os.path.dirname(__file__) + '/..'), 'static'),
+    #'/app/',
 )
 
-print "###### %s" % PROJECT_PATH
+#print "###### %s" % PROJECT_PATH
 
 # List of finder classes that know how to find static files in
 # various locations.
