@@ -1,4 +1,5 @@
 from django.conf.urls import patterns, include, url
+import settings 
 
 # Uncomment the next two lines to enable the admin:
 from django.contrib import admin
@@ -6,7 +7,8 @@ admin.autodiscover()
 
 urlpatterns = patterns('',
     url(r'^admin/', include(admin.site.urls)),
-
+    #(r'^static/(?P.*)$', 'django.views.static.serve', {'document_root': settings.STATIC_ROOT}),
+    
     url(r'^$', 'metrics.views.home_page', name='home'),
     
     url(r'^cfd_chart/$', 'metrics.views.cfd_chart_page', name='cfd_chart_page'),
