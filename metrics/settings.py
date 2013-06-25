@@ -3,6 +3,10 @@
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
 
+import os
+PROJECT_PATH = os.path.dirname(os.path.abspath(__file__))
+
+
 ADMINS = (
     ('Joel Correa', '1joelcorrea@gmail.com'),
 )
@@ -117,7 +121,8 @@ TEMPLATE_DIRS = (
     # Put strings here, like "/home/html/django_templates" or "C:/www/django/templates".
     # Always use forward slashes, even on Windows.
     # Don't forget to use absolute paths, not relative paths.
-    'metrics/metrics/templates'
+    'metrics/metrics/templates',
+    "%s/templates" % PROJECT_PATH,
 )
 
 INSTALLED_APPS = (
