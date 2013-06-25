@@ -3,7 +3,7 @@ dj-database-url==0.2.1
 psycopg2==2.4.6
 gunicorn==0.17.2
 pymongo==2.4
-py-trello
+py-trello==0.1.3
 trello
 trollop
 mysql-python
