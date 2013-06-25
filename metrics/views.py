@@ -4,7 +4,6 @@ from django.utils import simplejson
 from django.template import RequestContext
 from trello_api.miner import *
 from mongo.client import *
-from trello import *
 import datetime
 from time import mktime, strptime
 import time
@@ -41,6 +40,7 @@ def home_page(request):
     return render_to_response('home.html', {})
 
 def cfd_chart_page(request):
+    from trello import TrelloClient
     client = TrelloClient(settings.TRELLO_CREDENTIALS.get('api_key'), settings.TRELLO_CREDENTIALS.get('token'))
     graph_data = []
     
