@@ -78,6 +78,8 @@ STATICFILES_DIRS = (
     '%s/htdocs/static/' % PROJECT_PATH,
 )
 
+print "###### %s" % PROJECT_PATH
+
 # List of finder classes that know how to find static files in
 # various locations.
 STATICFILES_FINDERS = (
