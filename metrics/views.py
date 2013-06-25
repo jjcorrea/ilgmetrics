@@ -51,36 +51,40 @@ def cfd_chart_page(request):
         en_in = request.POST['end_datepick']
         tm_in = request.POST['team']
         
-        if st_in and en_in and tm_in: 
-            with PyMongoClient() as mongo:
-                snapshots = mongo.metrics.snapshots
-                
+        with PyMongoClient() as mongo:
+            snapshots = mongo.metrics.snapshots
+
+            if (not st_in) or (not en_in):
+                today = datetime.datetime.today()
+                start = datetime.datetime(today.year, today.month, today.day)
+                end = datetime.datetime(today.year, today.month, today.day, 23, 59, 59)
+            else:
                 start = datetime.datetime.fromtimestamp(mktime(strptime(st_in, '%d/%m/%Y')))
                 end = datetime.datetime.fromtimestamp(mktime(strptime(en_in, '%d/%m/%Y')))
                 
-                date_ranges = generate_data_subranges(start, end)
-        
-                # counter lists
-                total_backlog_list = []
-                total_in_progress_list = []
-                total_done_list = []
-        
-                # seek for previous card status
-                for idx, date in enumerate(date_ranges):
-                    next_date_expected_index = idx+1
-                    next_date_index = next_date_expected_index if len(date_ranges)>next_date_expected_index else len(date_ranges)-1
-                    range_end = date_ranges[next_date_index]
-                    
-                    done_raw_rs = prepare_cfd_query(snapshots, 'DONE', [], range_end, tm_in)
-                    in_progress_raw_rs = prepare_cfd_query(snapshots, 'IN_PROGRESS', [r['title'] for r in done_raw_rs], range_end, tm_in)
-                    backlog_rs = prepare_cfd_query(snapshots, 'BACKLOG', [r['title'] for r in done_raw_rs] + [r['title'] for r in in_progress_raw_rs], range_end, tm_in)
-        
-                    total_backlog_list.append(backlog_rs.count())
-                    total_in_progress_list.append(in_progress_raw_rs.count())
-                    total_done_list.append(done_raw_rs.count())
-                                
-                graph_data = (total_backlog_list, total_in_progress_list, total_done_list, [d.strftime("%d/%m/%Y %H:%M") for d in date_ranges])
+            date_ranges = generate_data_subranges(start, end)
     
+            # counter lists
+            total_backlog_list = []
+            total_in_progress_list = []
+            total_done_list = []
+    
+            # seek for previous card status
+            for idx, date in enumerate(date_ranges):
+                next_date_expected_index = idx+1
+                next_date_index = next_date_expected_index if len(date_ranges)>next_date_expected_index else len(date_ranges)-1
+                range_end = date_ranges[next_date_index]
+                
+                done_raw_rs = prepare_cfd_query(snapshots, 'DONE', [], range_end, tm_in)
+                in_progress_raw_rs = prepare_cfd_query(snapshots, 'IN_PROGRESS', [r['title'] for r in done_raw_rs], range_end, tm_in)
+                backlog_rs = prepare_cfd_query(snapshots, 'BACKLOG', [r['title'] for r in done_raw_rs] + [r['title'] for r in in_progress_raw_rs], range_end, tm_in)
+    
+                total_backlog_list.append(backlog_rs.count())
+                total_in_progress_list.append(in_progress_raw_rs.count())
+                total_done_list.append(done_raw_rs.count())
+                            
+            graph_data = (total_backlog_list, total_in_progress_list, total_done_list, [d.strftime("%d/%m/%Y %H:%M") for d in date_ranges])
+
     posted_data = (st_in,en_in,tm_in)
     return render_to_response('cfd_chart.html', {'graph_data':graph_data, 'posted':posted_data}, context_instance=RequestContext(request))
 
@@ -120,8 +124,11 @@ def story_metrics_page(request):
         services = {'Search':0, 'Retrieve':0, 'Export':0, 'Ontology':0, 'Chemistry':0, 'Alert':0}
         
         for service in services.keys():
-            res = snapshots.find({'services': {'$in':[service]}})
+            print 'in %s' % service
+            #res = snapshots.find({'services': {'$in':[service]}})
+            res = snapshots.find({'services': service})
             services[service] = res.count()
+            print 'count %s' % services[service]
             #print [r for r in res]
     
     return render_to_response('story_metrics.html', {'services_share': services}, context_instance=RequestContext(request))
