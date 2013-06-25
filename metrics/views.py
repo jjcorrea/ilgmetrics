@@ -4,7 +4,7 @@ from django.utils import simplejson
 from django.template import RequestContext
 from trello_api.miner import *
 from mongo.client import *
-from trello import TrelloClient
+from trello import *
 import datetime
 from time import mktime, strptime
 import time
