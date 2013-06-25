@@ -81,6 +81,11 @@ $(function () {
 				<option {% if posted.2 == "JOHN_DEERE" %}selected='selected'{% endif %} value="JOHN_DEERE">JOHN DEERE</option>
 			</select>
 		</label>
+		
+		<label for="tracking_points">Tracking points:
+		<input id="tracking_points" name="tracking_points" class='mini' type="text" value="{{posted.3}}" />
+		</label>
+		
 		<input type="submit" class="btn btn-success">
 </form>
 	

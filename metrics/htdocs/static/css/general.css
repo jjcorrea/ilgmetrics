@@ -14,3 +14,6 @@ form.horizontal label{
 input[type=text],input[type=submit]{
 	/*vertical-align: top;*/
 }
+input[type=text].mini{
+	width:50px
+}

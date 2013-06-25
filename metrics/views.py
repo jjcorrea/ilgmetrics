@@ -19,10 +19,10 @@ def prepare_story_metrics_query(snapshots, status, start, end, team):
     if team and team <> 'ALL': query['team'] = team
     return snapshots.find(query)
 
-def generate_data_subranges(start, end):
+def generate_data_subranges(start, end, tracking_points):
     # gets the secs between END and START
     seconds_between_dates = (end-start).total_seconds()
-    second_td_increment = seconds_between_dates / 5
+    second_td_increment = seconds_between_dates / tracking_points
     date_ranges = []
     
     d = start
@@ -50,6 +50,7 @@ def cfd_chart_page(request):
         st_in = request.POST['start_datepick']
         en_in = request.POST['end_datepick']
         tm_in = request.POST['team']
+        tp_in = request.POST['tracking_points']
         
         with PyMongoClient() as mongo:
             snapshots = mongo.metrics.snapshots
@@ -61,8 +62,13 @@ def cfd_chart_page(request):
             else:
                 start = datetime.datetime.fromtimestamp(mktime(strptime(st_in, '%d/%m/%Y')))
                 end = datetime.datetime.fromtimestamp(mktime(strptime(en_in, '%d/%m/%Y')))
+            
+            if not tp_in:
+                tp_in = 5 
+            else:
+                tp_in = int(tp_in)
                 
-            date_ranges = generate_data_subranges(start, end)
+            date_ranges = generate_data_subranges(start, end, tp_in)
     
             # counter lists
             total_backlog_list = []
@@ -85,7 +91,7 @@ def cfd_chart_page(request):
                             
             graph_data = (total_backlog_list, total_in_progress_list, total_done_list, [d.strftime("%d/%m/%Y %H:%M") for d in date_ranges])
 
-    posted_data = (st_in,en_in,tm_in)
+    posted_data = (st_in,en_in,tm_in,tp_in)
     return render_to_response('cfd_chart.html', {'graph_data':graph_data, 'posted':posted_data}, context_instance=RequestContext(request))
 
 def story_metrics_page(request):
