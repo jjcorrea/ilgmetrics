@@ -1,4 +1,26 @@
+language: python
+python:
+  - "2.7"
+env: 
+  global: 
+    secure: |-
+      MYBJ8Fuq+f0NUBfhMC1kf5oGsjCkL90ihHq9OpOLhl0wkeY4Docqwv5Qq80U
+      ygfnEAeqaT208id96KVCtytNG+ZzwZi/pDd/3ngcyvrIjXC0CbapNzqrOSXR
+      AIk6WpK9je8wBbNE15flhVBS8iKuP6QSvP0YoNvKJcgBCroVaRk=
+  - DJANGO=1.4
+install:
+  - pip install -q Django==$DJANGO --use-mirrors
+  - pip install pep8 --use-mirrors
+  - pip install https://github.com/dcramer/pyflakes/tarball/master
+  - pip install -q -e . --use-mirrors
+before_script:
+  - "pep8 --exclude=migrations --ignore=E501,E225 src"
+  - pyflakes -x W src
+script:
+  - python setup.py test
+
 after_success:
+
           - git remote add heroku git@heroku.com:ilg-metrics.git
           - echo "Host heroku.com" >> ~/.ssh/config
           - echo "   StrictHostKeyChecking no" >> ~/.ssh/config
