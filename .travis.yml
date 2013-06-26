@@ -11,8 +11,6 @@ env:
       vVO5wlBgLrKgmROPHSHuQKnnrF+5OQefBNsc8XuUvFQIMGH+kjQ=
 python: 
 - "2.7"
-script: 
-- python setup.py test
 install: 
 - pip install -q Django==$DJANGO --use-mirrors
 - pip install pep8 --use-mirrors
