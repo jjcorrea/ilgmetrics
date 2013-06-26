@@ -15,7 +15,7 @@ install:
 - pip install -q Django==$DJANGO --use-mirrors
 - pip install pep8 --use-mirrors
 - pip install https://github.com/dcramer/pyflakes/tarball/master
-after_success: 
+script:
 - git remote add heroku git@heroku.com:ilg-metrics.git
 - echo "Host heroku.com" >> ~/.ssh/config
 - echo "   StrictHostKeyChecking no" >> ~/.ssh/config
