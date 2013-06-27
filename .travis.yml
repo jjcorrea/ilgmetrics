@@ -25,3 +25,4 @@ script:
  - heroku keys:clear
  - yes | heroku keys:add
  - yes | git push heroku master
+ - heroku ps:scale web=1 
