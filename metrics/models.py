@@ -32,4 +32,4 @@ class Sprint(models.Model):
     sprint_name = models.CharField(max_length=30)
     
     def __str__(self):
-        return '%s - %s' % (team, sprint_name)
+        return '%s - %s' % (self.team, self.sprint_name)
