@@ -1,31 +1,27 @@
+--- 
 language: python
-python:
-  - "2.7"
+before_script: 
+- pyflakes -x W metrics
 env: 
   global: 
-    secure: |-
-      MYBJ8Fuq+f0NUBfhMC1kf5oGsjCkL90ihHq9OpOLhl0wkeY4Docqwv5Qq80U
-      ygfnEAeqaT208id96KVCtytNG+ZzwZi/pDd/3ngcyvrIjXC0CbapNzqrOSXR
-      AIk6WpK9je8wBbNE15flhVBS8iKuP6QSvP0YoNvKJcgBCroVaRk=
   - DJANGO=1.4
-install:
-  - pip install -q Django==$DJANGO --use-mirrors
-  - pip install pep8 --use-mirrors
-  - pip install https://github.com/dcramer/pyflakes/tarball/master
-  - pip install -q -e . --use-mirrors
-before_script:
-  - pyflakes -x W src
+  - secure: |-
+      Bpm3nChZNxjt34YKKHEk07WfnetSMrJoqCS6roNh4he0mS0VX39MQot/oDlf
+      YYTEsHNQ+nVxHbBSU9Usjj3GSTUMO+1pDGczvjTSKtQ/gqftxj6vocWnjdC8
+      vVO5wlBgLrKgmROPHSHuQKnnrF+5OQefBNsc8XuUvFQIMGH+kjQ=
+python: 
+- "2.7"
+install: 
+- pip install -q Django==$DJANGO --use-mirrors
+- pip install pep8 --use-mirrors
+- pip install https://github.com/dcramer/pyflakes/tarball/master
 script:
-  - python setup.py test
-
-after_success:
-
-          - git remote add heroku git@heroku.com:ilg-metrics.git
-          - echo "Host heroku.com" >> ~/.ssh/config
-          - echo "   StrictHostKeyChecking no" >> ~/.ssh/config
-          - echo "   CheckHostIP no" >> ~/.ssh/config
-          - echo "   UserKnownHostsFile=/dev/null" >> ~/.ssh/config
-          - heroku keys:clear
-          - yes | heroku keys:add
-          - yes | git push heroku master
-        
+ - wget -qO- https://toolbelt.heroku.com/install-ubuntu.sh | sh
+ - git remote add heroku git@heroku.com:ilg-metrics.git
+ - echo "Host heroku.com" >> ~/.ssh/config
+ - echo "   StrictHostKeyChecking no" >> ~/.ssh/config
+ - echo "   CheckHostIP no" >> ~/.ssh/config
+ - echo "   UserKnownHostsFile=/dev/null" >> ~/.ssh/config
+ - heroku keys:clear
+ - yes | heroku keys:add
+ - yes | git push heroku master
