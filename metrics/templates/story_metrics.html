@@ -7,7 +7,53 @@ $(function () {
 	    //$('#datatable').dataTable();
 	    $('.datepick').datepicker({ dateFormat: "dd/mm/yy" });
 	
-	    $('#container').highcharts({
+	    /*
+	    	
+	    $('#stacked').highcharts({
+            chart: {
+                type: 'bar'
+            },
+            title: {
+                text: 'Services share'
+            },
+            xAxis: {
+                categories: ['Alert', 'Autocomplete', 'Chemistry', 'Export', 'Export-Investex', 'Export-Search', 'Ontology', 'Retrieve', 'Retrieve-Regulatory', 'Search', 'Storage', 'TI Wrapper']
+            },
+            yAxis: {
+                min: 0,
+                title: {
+                    text: 'Services share per team'
+                }
+            },
+            legend: {
+                backgroundColor: '#FFFFFF',
+                reversed: true
+            },
+            plotOptions: {
+                series: {
+                    stacking: 'normal'
+                }
+            },
+                series: [
+            {
+                name: 'SPARTA',
+                data: [2, 2, 3, 2, 1, 0, 0, 0, 0, 0, 0, 0]
+            }, {
+                name: 'KOALA',
+                data: [3, 4, 4, 2, 5, 0, 0, 0, 0, 0, 0, 0]
+            },{
+                name: 'DRIVE',
+                data: [5, 3, 4, 7, 2, 0, 0, 0, 0, 0, 0, 0]
+            },
+            {
+                name: 'BARCELONA',
+                data: [3, 4, 4, 2, 5, 0, 0, 0, 0, 0, 0, 0]
+            }]
+        });	    
+	    */
+	    
+	   	// workstream share
+	    $('#workstream').highcharts({
 	        chart: {
 	            plotBackgroundColor: null,
 	            plotBorderWidth: null,
@@ -33,9 +79,9 @@ $(function () {
 	        },
 	        series: [{
 	            type: 'pie',
-	            name: 'Browser share',
+	            name: 'Workstream share',
 	            data: [
-					{% for key,value in services_share.items %}
+					{% for key,value in workstream_share.items %}
 						['{{key}}', {{value}}],
 					{% endfor %}
 	            ]
@@ -48,5 +94,7 @@ $(function () {
 {% endblock %}
 
 {% block content %}
-	<div id="container"></div>
+	<div id="stacked"></div>
+	<hr />
+	<div id="workstream"></div>
 {% endblock %}

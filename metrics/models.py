@@ -10,6 +10,7 @@ class TrelloBoard(models.Model):
     
 class KanbanStatus(models.Model):
     name = models.CharField(max_length=255)
+    groups_status = models.CharField(max_length=255)
     
     def __str__(self):
         return self.name

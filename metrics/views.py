@@ -8,6 +8,7 @@ import datetime
 from time import mktime, strptime
 import time
 from utils import *
+from models import *
 
 def prepare_cfd_query(snapshots, status, ignored_titles, end, tm_in):
     query ={'status':{'$in':settings.CFD_STATUS_MAP[status]}, 'title' : {'$nin': ignored_titles}, 'date_in' : {'$lt' : end}}
@@ -96,49 +97,28 @@ def cfd_chart_page(request):
     return render_to_response('cfd_chart.html', {'graph_data':graph_data, 'posted':posted_data}, context_instance=RequestContext(request))
 
 def story_metrics_page(request):
-    '''
-    output_data = ''
-    st_in = ''
-    en_in = ''
-    tm_in = ''
-    
-    if request.method == 'POST':
-        st_in = request.POST['start_datepick']
-        en_in = request.POST['end_datepick']
-        tm_in = request.POST['team']
-    
-        if st_in and en_in and tm_in: 
-            with PyMongoClient() as mongo:
-                snapshots = mongo.metrics.snapshots
-                start = datetime.datetime.fromtimestamp(mktime(strptime(st_in, '%d/%m/%Y')))
-                end = datetime.datetime.fromtimestamp(mktime(strptime(en_in, '%d/%m/%Y')))
-                    
-                backlog_rs = prepare_story_metrics_query(snapshots, settings.CFD_STATUS_MAP['BACKLOG'], start, end, tm_in)
-                in_progress_rs = prepare_story_metrics_query(snapshots, settings.CFD_STATUS_MAP['IN_PROGRESS'], start, end, tm_in)
-                done_rs = prepare_story_metrics_query(snapshots, settings.CFD_STATUS_MAP['DONE'], start, end, tm_in)
-                
-                backlog = [set([b['title'] for b in backlog_rs])]
-                in_progress = [set([b['title'] for b in in_progress_rs])]
-                done = [set([b['title'] for b in done_rs])]
-                
-                output_data = (backlog, in_progress, done)
-        
-    posted_data = (st_in, en_in, tm_in)
-    return render_to_response('story_metrics.html', {'metrics': output_data, 'posted':posted_data}, context_instance=RequestContext(request))
-    '''
     with PyMongoClient() as mongo:
         snapshots = mongo.metrics.snapshots
-        services = {'Search':0, 'Retrieve':0, 'Export':0, 'Ontology':0, 'Chemistry':0, 'Alert':0}
         
-        for service in services.keys():
-            print 'in %s' % service
-            #res = snapshots.find({'services': {'$in':[service]}})
-            res = snapshots.find({'services': service})
-            services[service] = res.count()
-            print 'count %s' % services[service]
-            #print [r for r in res]
-    
-    return render_to_response('story_metrics.html', {'services_share': services}, context_instance=RequestContext(request))
+        '''
+        # services share
+        services_share = []
+        for team in settings.TEAM_BOARD_MAP.keys():
+            #print team
+            res = snapshots.find({'services': {'$regex' : service}})
+            workstream_share[service] = res.count()
+
+        #services_share = {'Search':0, 'Retrieve':0, 'Export':0, 'Ontology':0, 'Chemistry':0, 'Alert':0}
+        '''
+        
+        # workstream share
+        workstream_share = {'Search':0, 'Retrieve':0, 'Export':0, 'Ontology':0, 'Chemistry':0, 'Alert':0}
+        for service in workstream_share.keys():
+            res = snapshots.find({'services': {'$regex' : service}})
+            workstream_share[service] = res.count()
+        
+        
+    return render_to_response('story_metrics.html', {'workstream_share': workstream_share}, context_instance=RequestContext(request))
 
 
 #
