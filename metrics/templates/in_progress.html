@@ -1,0 +1,111 @@
+{% extends "base.html" %}
+
+{% block extrahead %}
+
+<script type="text/javascript">
+$(function () {
+	$( ".tabs" ).tabs();
+	
+	$.get('/api/snapshots/teams/', function(data) {
+		  teams = data.teams;
+		  
+		  //http://127.0.0.1:8000/api/snapshots/stories/
+
+		  // team iteration and content preparation
+		  $.each(teams, function(i,v){
+			  
+			  //api/snapshots/stories/
+			  
+			  team = v.toLowerCase();
+			  console.log('# '+team);
+			  $('#teams_status').append('<div id="'+team+'_metrics">');
+			  $('#'+team+'_metrics').append('<h2>'+team+'</h2>');
+			  //$('#'+team+'_metrics').append('<h3>Backlog</h3><table class="table table-striped" id="backlog_items"><thead><th>Date</th><th>Services</th><th>Title</th></thead><tbody></tbody></table>');
+			  $('#'+team+'_metrics').append('<table class="table table-striped" id="in_progress_items"><thead><th>Date</th><th>Services</th><th>Title</th></thead><tbody></tbody></table>');
+			  //$('#'+team+'_metrics').append('<h3>Done</h3><table class="table table-striped" id="done_items"><thead><th>Date</th><th>Services</th><th>Title</th></thead><tbody></tbody></table></div>');
+			  
+			  
+			  
+			  $.get('/api/snapshots/stories/?global_status=IN_PROGRESS&team='+team, function(data) {
+				  //console.log(data);
+				  
+				  $.each(data, function(key, value){
+					  global_status = key.toLowerCase();
+					  
+					  $.each(value, function(item_key, item_value){
+						  //global_status
+						  team = item_value['team'];
+						  date = item_value['date'];
+						  title = item_value['title'];
+						  services = item_value['services'];
+						  
+						  console.log("#"+team.toLowerCase()+"_metrics");
+						  console.log('#'+global_status+'_items');
+						  
+						  $("#"+team.toLowerCase()+"_metrics").children('#'+global_status+'_items').children('tbody').append('<tr><td>'+date+'</td><td>'+services+'</td><td>'+title+'</td></tr>');
+						  //console.log(item_value);
+						  
+					  });
+					    
+				  });
+				  
+				  /*
+				  $.each(data.substatus, function(substatus_index, substatus){
+					  console.log('## '+team);
+					  $('#'+team+'_metrics').append('<h3 class=".'+team+'_metrics">'+substatus+'</h3>');
+					  //substatuses.append(substatus);
+				  });*/
+				  
+			  });					  
+			  /*
+			  $.get('api/snapshots/substatus/?global_status=', function(data) {
+				  $.each(data.substatus, function(substatus_index, substatus){
+					  console.log('## '+team);
+					  $('#'+team+'_metrics').append('<h3 class=".'+team+'_metrics">'+substatus+'</h3>');
+					  //substatuses.append(substatus);
+				  });
+				  
+			  });*/
+			  
+			  
+			  //
+			  
+		  });
+		  
+		  //alert('Load was performed.');
+	});
+	
+});
+</script>
+{% endblock %}
+
+{% block upper_content %}
+    <!-- <h1>Basic speak!</h1>
+    <p class="lead">Cras justo odio, dapibus ac facilisis in, egestas eget quam. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus.</p>
+    <a class="btn btn-large btn-success" href="#">Sign up today</a>-->
+   
+   <div id='teams_status'>
+   		
+
+   </div>
+   
+{% endblock %}
+
+{% block content %}
+<!-- 
+    <div class="span4">
+      <h2>User Reports</h2>
+      <p>Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui. </p>
+      <p><a class="btn" href="#">View details</a></p>
+    </div>
+    <div class="span4">
+      <h2>Real Time</h2>
+      <p>Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui. </p>
+      <p><a class="btn" href="#">View details</a></p>
+   </div>
+    <div class="span4">
+      <h2>Jira Sync</h2>
+      <p>Donec sed odio dui. Cras justo odio, dapibus ac facilisis in, egestas eget quam. Vestibulum id ligula porta felis euismod semper. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa.</p>
+      <p><a class="btn" href="#">View details</a></p>
+    </div> -->
+{% endblock %}

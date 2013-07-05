@@ -11,6 +11,10 @@ urlpatterns = patterns('',
     
     url(r'^$', 'metrics.views.home_page', name='home'),
     
+    url(r'^in_progress/$', 'metrics.views.in_progress_page', name='in_progress'),
+    url(r'^todo/$', 'metrics.views.todo_page', name='todo'),
+    url(r'^done/$', 'metrics.views.done_page', name='done'),
+    
     url(r'^cfd_chart/$', 'metrics.views.cfd_chart_page', name='cfd_chart_page'),
     url(r'^story_metrics/$', 'metrics.views.story_metrics_page', name='story_metrics_page'),
 
