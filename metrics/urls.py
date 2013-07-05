@@ -13,6 +13,9 @@ urlpatterns = patterns('',
     
     url(r'^cfd_chart/$', 'metrics.views.cfd_chart_page', name='cfd_chart_page'),
     url(r'^story_metrics/$', 'metrics.views.story_metrics_page', name='story_metrics_page'),
+
+
+    url(r'^api/snapshots/(?P<category>\w{0,50})/$', 'metrics.views.api_snapshots', name='api_snapshots'),
     
     url(r'^boards/$', 'metrics.views.get_boards', name='boards'),
     url(r'^boards/(?P<board_id>\w+)/lists/$', 'metrics.views.get_board_lists', name='lists'),

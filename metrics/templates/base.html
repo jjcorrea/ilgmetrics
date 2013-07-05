@@ -50,7 +50,7 @@
 	          <div class="navbar-inner">
 	            <div class="container">
 	              <ul class="nav">
-	                <li class="{% ifequal request.path "/" %}active{% endifequal %}"><a href="/">Home</a></li>
+	                <li class="{% if not request.path %}active{% endif %}"><a href="/">In Progress</a></li>
 	                <li class="{% ifequal request.path "/story_metrics/" %}active{% endifequal %}"><a href="/story_metrics/">Global Metrics</a></li>
 	                <!--<li class="{% ifequal request.path "/" %}active{% endifequal %}"><a href="#">Bug Metrics</a></li> 
 	                <li class="{% ifequal request.path "/" %}active{% endifequal %}"><a href="#">Team Metrics</a></li>-->

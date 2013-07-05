@@ -16,6 +16,7 @@ from time import sleep
 import sys
 from utils import *
 from logger import *
+from bson.code import Code
 
 class SnapshotWorker(object):
     def __init__(self):
@@ -86,6 +87,12 @@ while True:
                                 if worker.is_status_updated(story, title, status): 
                                     logger.info('[%s] status for story (%s) ' % (team, status))
                                     worker.db.snapshots.insert(mongo_in)
+
+                # REDUCED STORY STATUSES 
+                logger.info("["+now()+"] RUNNING MAP-REDUCES...")
+                map = Code("function(){ emit(this.team+'#'+this.title, this.status); }")
+                reduce = Code("function(id, statuses){ var status_str = ''; for(var i = 0; i < statuses.length; i++){ status_str += statuses[i]+'#'; } return status_str  }")
+                worker.db.snapshots.map_reduce(map, reduce, 'snapshots_reduced_story_statuses')                                    
         
                 logger.info("["+now()+"] FINISHED TEAM PROCESSING.")
     except e:

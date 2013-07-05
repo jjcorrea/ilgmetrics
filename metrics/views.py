@@ -9,11 +9,73 @@ from time import mktime, strptime
 import time
 from utils import *
 from models import *
+from bson.code import Code
+import re
 
-def prepare_cfd_query(snapshots, status, ignored_titles, end, tm_in):
-    query ={'status':{'$in':settings.CFD_STATUS_MAP[status]}, 'title' : {'$nin': ignored_titles}, 'date_in' : {'$lt' : end}}
+BAD_REQUEST = HttpResponse('BAD REQUEST', status=400)
+
+def prepare_cfd_query(snapshots, status, ignored_titles=[], end=None, tm_in=None):
+    query ={'status':{'$in':settings.CFD_STATUS_MAP[status]}}
     if tm_in and tm_in <> 'ALL': query['team'] = tm_in
-    return snapshots.find(query)
+    if end: query['date_in'] = {'$lt':end}
+    if len(ignored_titles)>0: query['title'] = {'$nin': ignored_titles}
+    return snapshots.find(query).sort([('date_in',-1)])
+
+def extract_last_status(global_status, status_group):
+    status_list = status_group.split("#")
+    all_substatus = settings.CFD_STATUS_MAP[global_status]
+    
+    for story_status in reversed(status_list):
+         if story_status in all_substatus:
+             print 'will return [%s]' % (story_status)
+             return story_status
+
+def joinstmap(st):
+    other_statuses = []
+    if st == 'BACKLOG':
+         other_statuses = ['IN_PROGRESS', 'DONE']
+    elif st == 'IN_PROGRESS':
+         other_statuses = ['DONE']
+    elif st == 'DONE':
+         other_statuses = []
+         
+    ignored_statuses = []
+    for ost in other_statuses:ignored_statuses += settings.CFD_STATUS_MAP[ost] 
+    
+    # 1-WANTED, 2-UNWANTED
+    regex = '^(?=.*(%s))(?!.*(%s)).*' % ('|'.join(settings.CFD_STATUS_MAP[st]), '|'.join(ignored_statuses))
+    print regex
+    return regex
+
+def prepare_api_stories_output(snapshots, snapshots_reduced, team, global_status):
+    json = {}
+    status = global_status
+    
+    query = {'_id':{'$regex':team},'value':{'$regex':re.compile(joinstmap(global_status))}}
+    
+    print query
+    
+    team_stories = snapshots_reduced.find(query)
+    
+    # generates a list of LASTSTATUS and TITLE
+    title_and_last_status_list = [(story['_id'].replace(team+'#', ''), extract_last_status(global_status, story['value'])) for story in team_stories]
+    
+    # GET the id list of all the specific SNAPSHOTs
+    ids = []
+    for title, status in title_and_last_status_list:
+        res = next(snapshots.find({'title':title, 'status':status}), None)
+        if res: 
+            #print('[%s][%s][%s] %s' % (team, status, res['_id'], title))
+            ids.append(res['_id'])
+        
+    def build_story_output(story):
+        return {'team':story['team'], 'date': story['date_in'].strftime("%d/%m/%Y %H:%M"), 'status': story['status'] , 'title':story['title'], 'services':eval(story['services'])}
+    
+    json[global_status] = [build_story_output(story) for story in snapshots.find({'_id':{'$in':ids}}).sort([('date_in', -1)])]
+
+    return json     
+    
+    
 
 def prepare_story_metrics_query(snapshots, status, start, end, team):
     query = {'status':{'$in':status}, 'date_in' : {'$gt': start,'$lt' : end}}
@@ -21,7 +83,6 @@ def prepare_story_metrics_query(snapshots, status, start, end, team):
     return snapshots.find(query)
 
 def generate_data_subranges(start, end, tracking_points):
-    # gets the secs between END and START
     seconds_between_dates = (end-start).total_seconds()
     second_td_increment = seconds_between_dates / tracking_points
     date_ranges = []
@@ -35,10 +96,64 @@ def generate_data_subranges(start, end, tracking_points):
         
     return date_ranges
 
+# API
+
+def api_snapshots(request, category):
+    category = category.lower()
+    json = {}
+    
+    if (request.method == 'POST') or (not category): return BAD_REQUEST
+    
+    with PyMongoClient() as mongo:
+        snapshots = mongo.metrics.snapshots
+        snapshots_reduced = mongo.metrics.snapshots_reduced_story_statuses
+        
+        if category == 'teams':
+            json['teams'] = [team for team in snapshots.distinct('team')]
+        elif category == 'stories':    
+            if (not request.GET.has_key('team')) or (not request.GET.has_key('global_status')): return BAD_REQUEST
+            team = request.GET['team'].upper()
+            global_status = request.GET['global_status'].upper()
+            
+            json = prepare_api_stories_output(snapshots, snapshots_reduced, team, global_status)
+            
+    return HttpResponse(simplejson.dumps(json), content_type="application/json")
+
+
 # VIEWS
 
 def home_page(request):
-    return render_to_response('home.html', {})
+    response_data = {}
+    with PyMongoClient() as mongo:
+        snapshots = mongo.metrics.snapshots
+        '''
+        for team in settings.TEAM_BOARD_MAP.keys():
+            backlog = snapshots.find({'team':team, 'status':{'$in':settings.CFD_STATUS_MAP['BACKLOG']}}).sort([('date_in',-1)])
+            in_progress = snapshots.find({'team':team, 'status':{'$in':settings.CFD_STATUS_MAP['IN_PROGRESS']}}).sort([('date_in',-1)])
+            done = snapshots.find({'team':team, 'status':{'$in':settings.CFD_STATUS_MAP['DONE']}}).sort([('date_in',-1)])
+    
+            # groups each substatus in the global group
+            grouped_backlog = {}
+            for status in settings.CFD_STATUS_MAP['BACKLOG']: grouped_backlog[status] = []
+            [grouped_backlog[story['status']].append(story) for story in backlog]
+            
+            grouped_in_progress = {}
+            for status in settings.CFD_STATUS_MAP['IN_PROGRESS']: grouped_in_progress[status] = []
+            [grouped_in_progress[story['status']].append(story) for story in in_progress]
+
+            grouped_done = {}
+            for status in settings.CFD_STATUS_MAP['DONE']: grouped_done[status] = []
+            [grouped_done[story['status']].append(story) for story in done]
+
+            print '#BACKLOG: '+ str(grouped_backlog)
+            print '#IN PROGRESS: '+ str(grouped_in_progress)
+            print '#DONE: '+ str(grouped_done)
+            
+    
+            response_data[team] = {'BACKLOG':grouped_backlog,'IN PROGRESS':grouped_in_progress, 'DONE':grouped_done}
+            #response_data[team] = [done]
+        '''
+    return render_to_response('home.html')
 
 def cfd_chart_page(request):
     graph_data = []
