@@ -12,7 +12,7 @@ urlpatterns = patterns('',
     url(r'^admin/', include(admin.site.urls)),
     #(r'^static/(?P.*)$', 'django.views.static.serve', {'document_root': settings.STATIC_ROOT}),
     
-    url(r'^$', 'metrics.views.home_page', name='home'),
+    url(r'^$', 'metrics.views.gui.home_page', name='home'),
     
     url(r'^in_progress/$', 'metrics.views.gui.in_progress_page', name='in_progress'),
     url(r'^todo/$', 'metrics.views.gui.todo_page', name='todo'),
