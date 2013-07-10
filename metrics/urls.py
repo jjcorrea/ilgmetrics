@@ -1,4 +1,7 @@
 from django.conf.urls import patterns, include, url
+from views.api import *
+from views.gui import *
+from views.poc import *
 import settings 
 
 # Uncomment the next two lines to enable the admin:
@@ -11,19 +14,19 @@ urlpatterns = patterns('',
     
     url(r'^$', 'metrics.views.home_page', name='home'),
     
-    url(r'^in_progress/$', 'metrics.views.in_progress_page', name='in_progress'),
-    url(r'^todo/$', 'metrics.views.todo_page', name='todo'),
-    url(r'^done/$', 'metrics.views.done_page', name='done'),
+    url(r'^in_progress/$', 'metrics.views.gui.in_progress_page', name='in_progress'),
+    url(r'^todo/$', 'metrics.views.gui.todo_page', name='todo'),
+    url(r'^done/$', 'metrics.views.gui.done_page', name='done'),
     
-    url(r'^cfd_chart/$', 'metrics.views.cfd_chart_page', name='cfd_chart_page'),
-    url(r'^story_metrics/$', 'metrics.views.story_metrics_page', name='story_metrics_page'),
+    url(r'^cfd_chart/$', 'metrics.views.gui.cfd_chart_page', name='cfd_chart_page'),
+    url(r'^story_metrics/$', 'metrics.views.gui.story_metrics_page', name='story_metrics_page'),
 
 
-    url(r'^api/snapshots/(?P<category>\w{0,50})/$', 'metrics.views.api_snapshots', name='api_snapshots'),
+    url(r'^api/snapshots/(?P<category>\w{0,50})/$', 'metrics.views.api.api_snapshots', name='api_snapshots'),
     
-    url(r'^boards/$', 'metrics.views.get_boards', name='boards'),
-    url(r'^boards/(?P<board_id>\w+)/lists/$', 'metrics.views.get_board_lists', name='lists'),
-    url(r'^boards/(?P<board_id>\w+)/lists/(?P<list_id>\w+)/cards/$', 'metrics.views.get_list_cards', name='cards'),
-    url(r'^metrics/$', 'metrics.views.get_metrics_data', name='metrics'),
+    url(r'^boards/$', 'metrics.views.poc.get_boards', name='boards'),
+    url(r'^boards/(?P<board_id>\w+)/lists/$', 'metrics.views.poc.get_board_lists', name='lists'),
+    url(r'^boards/(?P<board_id>\w+)/lists/(?P<list_id>\w+)/cards/$', 'metrics.views.poc.get_list_cards', name='cards'),
+    url(r'^metrics/$', 'metrics.views.poc.get_metrics_data', name='metrics'),
     
 )

@@ -1,0 +1,11 @@
+{% extends "commons/base.html" %}
+
+{% block extrahead %}
+	{% include "commons/jsutils.html" with status="DONE" %}
+
+{% endblock %}
+
+{% block upper_content %}
+   <div id="DONE_chart"></div>
+   <div id='teams_status'></div>
+{% endblock %}

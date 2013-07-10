@@ -1,0 +1,11 @@
+{% extends "commons/base.html" %}
+
+{% block extrahead %}
+	{% include "commons/jsutils.html" with status="BACKLOG" %}
+
+{% endblock %}
+
+{% block upper_content %}
+   <div id="BACKLOG_chart"></div>
+   <div id='teams_status'></div>
+{% endblock %}

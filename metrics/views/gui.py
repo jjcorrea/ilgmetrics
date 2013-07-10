@@ -2,20 +2,22 @@ from django.http import HttpResponse, HttpResponseNotFound, Http404
 from django.shortcuts import render_to_response
 from django.utils import simplejson
 from django.template import RequestContext
-from trello_api.miner import *
-from mongo.client import *
+from metrics.trello_api.miner import *
+from metrics.mongo.client import *
 import datetime
 from time import mktime, strptime
 import time
-from utils import *
-from models import *
+from metrics.utils import *
+from metrics.models import *
+import metrics.settings
 from bson.code import Code
+from shared import *
 import re
 
 BAD_REQUEST = HttpResponse('BAD REQUEST', status=400)
 
 #
-# API
+# SHARED
 #
 
 def extract_last_status(global_status, status_group):
@@ -26,76 +28,14 @@ def extract_last_status(global_status, status_group):
          if story_status in all_substatus:
              print 'will return [%s]' % (story_status)
              return story_status
-         
+
 def build_story_output(story):
-    return {'team':story['team'], 'date': story['date_in'].strftime("%d/%m/%Y %H:%M"), 'status': story['status'] , 'title':story['title'], 'services':eval(story['services'])}
-
-def joinstmap(st):
-    unwanted_statuses = []
-    if st == 'BACKLOG':
-         unwanted_statuses = ['IN_PROGRESS', 'DONE']
-    elif st == 'IN_PROGRESS':
-         unwanted_statuses = ['DONE']
-    elif st == 'DONE':
-         unwanted_statuses = []
-         
-    ignored_statuses = []
-    if len(unwanted_statuses)>0: 
-        for ost in unwanted_statuses:ignored_statuses += settings.CFD_STATUS_MAP[ost] 
+    response = {'team':story['team'], 'date': story['date_in'].strftime("%d/%m/%Y %H:%M"), 'status': story['status'] , 'title':story['title'], 'services':eval(story['services'])}
     
-    # 1-WANTED, 2-UNWANTED (not used if DONE)
-    regex = len(unwanted_statuses)>0 and '^(?=.*(%s))(?!.*(%s)).*' % ('|'.join(settings.CFD_STATUS_MAP[st]), '|'.join(ignored_statuses)) or '^(?=.*(%s)).*' % ('|'.join(settings.CFD_STATUS_MAP[st]))  
-    print regex
-    return regex
-
-def prepare_api_stories_output(snapshots, snapshots_reduced, team, global_status):
-    json = {}
-    status = global_status
+    if story.has_key('card_id'):
+        response['card_id'] = story['card_id']
     
-    query = {'_id':{'$regex':team},'value':{'$regex':re.compile(joinstmap(global_status))}}
-    
-    print query
-    
-    team_stories = snapshots_reduced.find(query)
-    
-    # generates a list of LASTSTATUS and TITLE
-    title_and_last_status_list = [(story['_id'].replace(team+'#', ''), extract_last_status(global_status, story['value'])) for story in team_stories]
-    
-    # GET the id list of all the specific SNAPSHOTs
-    ids = []
-    for title, status in title_and_last_status_list:
-        res = next(snapshots.find({'title':title, 'status':status}), None)
-        if res: 
-            #print('[%s][%s][%s] %s' % (team, status, res['_id'], title))
-            ids.append(res['_id'])
-        
-    json[global_status] = [build_story_output(story) for story in snapshots.find({'_id':{'$in':ids}}).sort([('date_in', -1)])]
-
-    return json     
-
-def api_snapshots(request, category):
-    category = category.lower()
-    json = {}
-    
-    if (request.method == 'POST') or (not category): return BAD_REQUEST
-    
-    with PyMongoClient() as mongo:
-        snapshots = mongo.metrics.snapshots
-        snapshots_reduced = mongo.metrics.snapshots_reduced_story_statuses
-        
-        if category == 'teams':
-            json['teams'] = [team for team in snapshots.distinct('team')]
-        elif category == 'stories':    
-            if (not request.GET.has_key('team')) or (not request.GET.has_key('global_status')): return BAD_REQUEST
-            team = request.GET['team'].upper()
-            global_status = request.GET['global_status'].upper()
-            json = prepare_api_stories_output(snapshots, snapshots_reduced, team, global_status)
-            
-    return HttpResponse(simplejson.dumps(json), content_type="application/json")
-
-#
-# VIEWS
-#
+    return response
 
 
 def find_unique_stories(snapshots, global_status, ignored_titles=[], end=None, tm_in=None):
@@ -124,20 +64,22 @@ def generate_data_subranges(start, end, tracking_points):
         
     return date_ranges
 
-
+#
+# GUI
+#
 def home_page(request):
     #response_data = {}
     return render_to_response('home.html')
 
 def in_progress_page(request):
-    return render_to_response('in_progress.html', {}, context_instance=RequestContext(request))
+    return render_to_response('kanban/in_progress.html', {}, context_instance=RequestContext(request))
 
 def todo_page(request):
-    return render_to_response('todo.html', {}, context_instance=RequestContext(request))
+    return render_to_response('kanban/todo.html', {}, context_instance=RequestContext(request))
 
 
 def done_page(request):
-    return render_to_response('done.html', {}, context_instance=RequestContext(request))
+    return render_to_response('kanban/done.html', {}, context_instance=RequestContext(request))
 
 
 def cfd_chart_page(request):
@@ -207,52 +149,5 @@ def story_metrics_page(request):
             workstream_share[service] = len(res)
         
     return render_to_response('story_metrics.html', {'workstream_share': workstream_share}, context_instance=RequestContext(request))
-
-
-#
-# POC trello requests
-#
-def get_boards(request):
-    json = {}
-    
-    with TrelloWrapper() as trello_client:
-        boards = trello_client.list_boards()
-        json.update({'boards' : [{'id': b.id, 'name': b.name} for b in boards]})
-    
-    return HttpResponse(simplejson.dumps(json), content_type="application/json")
-
-def get_board_lists(request, board_id):
-    json = {}
-    
-    with TrelloWrapper() as trello_client:
-        lists = trello_client.get_board(board_id).all_lists()
-        json.update({'lists' : [{'id': b.id, 'name': b.name} for b in lists]})
-    
-    return HttpResponse(simplejson.dumps(json), content_type="application/json")
-
-def get_list_cards(request, board_id, list_id):
-    json = {}
-    
-    with TrelloWrapper() as trello_client:
-        cards = trello_client.get_list(list_id).list_cards()
-        json.update({'cards' : [{'id': b.id, 'labels':get_single_card(b.id).labels, 'desc': get_single_card(b.id).desc} for b in cards]})
-    
-    return HttpResponse(simplejson.dumps(json), content_type="application/json")
-    
-def get_single_card(id):
-    with TrelloWrapperExtendedDesc() as trello_client:
-        return trello_client.get_card(id)
-
-def get_metrics_data(request):
-    json = {}
-    
-    with PyMongoClient() as mongo:
-        metrics = mongo.metrics.data
-        
-        for metric in metrics.find():
-            json.update({'metrics' : [metric.get('id') for metric in metrics.find()]})
-    
-    return HttpResponse(simplejson.dumps(json), content_type="application/json")
- 
 
     

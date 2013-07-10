@@ -72,19 +72,22 @@ while True:
                                 continue
                             else: board_stories.append(title)
                                 
-                            if (title not in config.TRELLO_CARD_IGNORE):
+                            if (title.lower() not in config.TRELLO_CARD_IGNORE):
                                 story = str(extract_task_identifier(card_extended.desc))
-                                mongo_in = {
-                                    'date_in': datetime.now(),
-                                    'story' : story,
-                                    'title' : title,
-                                    'status' : status,
-                                    'points' : extract_story_points(card.name),
-                                    'team' : team,
-                                    'services' : str([extract_string_brackets(label['name']) for label in card_extended.labels])
-                                }
                                 
                                 if worker.is_status_updated(story, title, status): 
+                                    mongo_in = {
+                                        'card_id':card.id,
+                                        'card_url': card_extended.url,
+                                        'date_in': datetime.now(),
+                                        'story' : story,
+                                        'title' : title,
+                                        'status' : status,
+                                        'points' : extract_story_points(card.name),
+                                        'team' : team,
+                                        'services' : str([extract_string_brackets(label['name']) for label in card_extended.labels])
+                                    }
+                                    
                                     logger.info('[%s] status for story (%s) ' % (team, status))
                                     worker.db.snapshots.insert(mongo_in)
 
@@ -95,7 +98,7 @@ while True:
                 worker.db.snapshots.map_reduce(map, reduce, 'snapshots_reduced_story_statuses')                                    
         
                 logger.info("["+now()+"] FINISHED TEAM PROCESSING.")
-    except e:
+    except:
         pass
     
     logger.info("["+now()+"] WILL SLEEP %s SECONDS" % (config.SNAPSHOT_INTERVAL))

@@ -1,0 +1,270 @@
+<script type="text/javascript">
+
+function run_charts(teams){
+    alert = [];
+    autocomplete=[];
+    chemistry=[];
+    exportService = [];
+    investex = [];
+    exportSearch = [];
+    ontology=[];
+    retrieve=[];
+    regulatory = [];
+    search = [];
+    tiWrapper = [];
+    api = [];
+    gui = [];
+    
+    $.each(teams, function(i, team){
+        valert = 0;
+        vautocomplete=0;
+        vchemistry=0;
+        vexportService = 0;
+        vinvestex = 0;
+        vexportSearch = 0;
+        vontology=0;
+        vretrieve=0;
+        vregulatory = 0;
+        vsearch = 0;
+        vtiWrapper = 0;
+        vapi = 0;
+        vgui = 0;
+
+        team = team.toLowerCase();
+    	
+    	$('#'+team+'_metrics').children('table').children('tbody').children().children('.services').each(function(){
+    		services = $(this).text().toLowerCase().split(',');
+    		if (services.indexOf('alert')>=0){
+    			valert++;
+    		}
+			if (services.indexOf('autocomplete')>=0){
+    			vautocomplete++;
+    		}
+			if (services.indexOf('chemistry')>=0){
+    			vchemistry++;
+    		}
+			if (services.indexOf('export')>=0){
+    			vexportService++;
+    		}
+			if (services.indexOf('investex')>=0){
+    			vinvestex++;
+    		}
+			if (services.indexOf('exportsearch')>=0){
+    			vexportSearch++;
+    		}
+			if (services.indexOf('ontology')>=0){
+    			vontology++;
+    		}
+			if (services.indexOf('retrieve')>=0){
+    			vretrieve++;
+    		}
+			if (services.indexOf('regulatory')>=0){
+    			vregulatory++;
+    		}
+			if (services.indexOf('search')>=0){
+    			vsearch++;
+    		}
+			if (services.indexOf('tiwrapper')>=0){
+    			vtiWrapper++;
+    		}
+			if (services.indexOf('api')>=0){
+    			vapi++;
+    		}
+			if (services.indexOf('gui')>=0){
+    			vgui++;
+    		}
+    	});
+    	
+    	alert.push(valert);
+    	autocomplete.push(vautocomplete);
+    	chemistry.push(vchemistry);
+    	exportService.push(vexportService);
+    	investex.push(vinvestex);
+    	exportSearch.push(vexportSearch);
+    	ontology.push(vontology);
+    	retrieve.push(vretrieve);
+    	regulatory.push(vregulatory);
+    	search.push(vsearch);
+    	tiWrapper.push(vtiWrapper);
+    	api.push(vapi);
+    	gui.push(vgui);
+    })
+    
+    
+    $('#{{status}}_chart').highcharts({
+        chart: {
+            type: 'bar'
+        },
+        title: {
+            text: '{{status}} tasks by Service'
+        },
+        subtitle: {
+            text: ''
+        },
+        xAxis: {
+            categories: teams,
+            title: {
+                text: null
+            }
+        },
+        yAxis: {
+            min: 0,
+            title: {
+                text: 'Total stories',
+                align: 'high'
+            },
+            labels: {
+                overflow: 'justify'
+            }
+        },
+        tooltip: {
+            valueSuffix: ' stories'
+        },
+        plotOptions: {
+    	   series: {
+                stacking: 'normal'
+            }
+        },
+        legend: {
+            layout: 'vertical',
+            align: 'right',
+            verticalAlign: 'top',
+            x: -100,
+            y: 100,
+            floating: true,
+            borderWidth: 1,
+            backgroundColor: '#FFFFFF',
+            shadow: true
+        },
+        credits: {
+            enabled: false
+        },
+        
+        series: [{
+            name: 'Alert',
+            data: alert
+        }, {
+            name: 'API',
+            data: api
+        },{
+            name: 'Autocomplete',
+            data: autocomplete
+        }, {
+            name: 'Chemistry',
+            data: chemistry
+        }, {
+            name: 'Export',
+            data: exportService
+        }, {
+            name: 'GUI',
+            data: gui
+        }, {
+            name: 'Investex',
+            data: investex
+        }, {
+            name: 'Export Search',
+            data: exportSearch
+        }, {
+            name: 'Ontology',
+            data: ontology
+        }, {
+            name: 'Retrieve',
+            data: retrieve
+        }, {
+            name: 'Regulatory',
+            data: regulatory
+        }, {
+            name: 'Search',
+            data: search
+        }, {
+            name: 'TI Wrapper',
+            data: tiWrapper
+        }]
+    });							
+}
+
+
+
+$(function () {	
+	$( ".tabs" ).tabs();
+	
+	$.get('/api/snapshots/teams/', function(data) {
+		  teams = data.teams;
+		  
+		  // team iteration and content preparation
+		  $.each(teams, function(i,v){
+			  team = v.toLowerCase();
+			  $('#teams_status').append('<div id="'+team+'_metrics">');
+			  $('#'+team+'_metrics').append('<h2>'+team+'</h2>');
+			  $('#'+team+'_metrics').append('<table class="table table-striped" id="{{status}}_items"><thead><th>Date</th><th>Services</th><th>Title</th></thead><tbody></tbody></table>');
+			  
+			  $.get('/api/snapshots/stories/?global_status={{status}}&team='+team, function(data) {
+				
+				  $.each(data, function(key, value){
+					  
+					  $.each(value, function(item_key, item_value){
+						  team = item_value['team'];
+						  date = item_value['date'];
+						  title = item_value['title'];
+						  services = item_value['services'];
+						  card_id = item_value['card_id']
+						  status = item_value['status']
+						  
+						  $("#"+team.toLowerCase()+"_metrics").children('#{{status}}_items').children('tbody').append('<tr id="'+card_id+'_'+status+'"><td>'+date+'</td><td class="services">'+services+'</td><td>'+title+'</td></tr>');
+					  });
+					    
+						$('[id*=_items]').children('tbody').children('tr').on('click', function(){
+							id = $(this).attr('id');
+							
+							card_id = id.split('_')[0];
+							status = id.split('_')[1];
+							
+							$('body').append('<div class="dialog" target="'+id+'">CardID:'+card_id+', status:'+status+'</div>')
+							
+							$( ".dialog" ).dialog({
+								width:500,
+								modal:true,
+								close: function( event, ui ) {
+									$('.dialog').remove();
+								},
+							      buttons: {
+							        "Remove Story": function() {
+							        	dialog = this;
+							        	$.get('/api/snapshots/remove/?story='+card_id, function(data) {
+							        		$('#'+$(dialog).attr('target')).fadeOut('slow', function(){
+							        			$(this).remove();
+							        			run_charts(teams);
+							        		});
+							        		
+							        		$('.dialog').remove();
+							        	});
+							        },
+							        "Remove current status": function() {
+								          $('.dialog').remove();
+								          run_charts(teams);
+								          return false;
+								        },
+							        Cancel: function() {
+							        	$('.dialog').remove();
+							        	return false;
+							        }
+							      }
+							    });
+						});
+				  });
+				  
+			  }).promise().done(function(){
+				  run_charts(teams);  
+			  });					  
+		  });
+		  
+	});
+	
+});
+
+</script>
+
+
+
+
+
