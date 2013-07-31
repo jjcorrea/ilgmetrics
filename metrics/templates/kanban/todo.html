@@ -2,10 +2,11 @@
 
 {% block extrahead %}
 	{% include "commons/jsutils.html" with status="BACKLOG" %}
-
+	
 {% endblock %}
 
 {% block upper_content %}
+   {% include "commons/kanban-base.html" with status="Backlog" %}
    <div id="BACKLOG_chart"></div>
    <div id='teams_status'></div>
 {% endblock %}

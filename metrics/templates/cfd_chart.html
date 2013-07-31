@@ -3,7 +3,6 @@
 {% block extrahead %}
 <script type="text/javascript">
 $(function () {
-	$('.datepick').datepicker({ dateFormat: "dd/mm/yy" });
 		$('#container').highcharts({
 	          chart: {
 	              type: 'area'
@@ -32,7 +31,7 @@ $(function () {
 	          },
 	          plotOptions: {
 	              area: {
-	                  stacking: 'percent',
+	            	  stacking: 'normal',
 	                  lineColor: '#ffffff',
 	                  lineWidth: 1,
 	                  marker: {
@@ -63,15 +62,15 @@ $(function () {
 		{% csrf_token %}
 		
 		<label for="start_datepick">Start date:
-		<input id="start_datepick" name="start_datepick" type="text" class="datepick" value="{{posted.0}}" />
+		<input id="start_datepick" name="start_datepick" type="text" class="datepick form-control" value="{{posted.0}}" />
 		</label>
 		
 		<label for="end_datepick">End date:
-		<input id="end_datepick" name="end_datepick" type="text" class="datepick"  value="{{posted.1}}" />
+		<input id="end_datepick" name="end_datepick" type="text" class="datepick form-control"  value="{{posted.1}}" />
 		</label>
 		
 		<label for="team">Team:
-			<select id="team" name="team">
+			<select id="team" name="team" class='form-control'>
 				<option {% if posted.2 == "ALL" %}selected='selected'{% endif %} value="ALL">ALL</option>
 				<option {% if posted.2 == "SPARTA" %}selected='selected'{% endif %} value="SPARTA">SPARTA</option>
 				<option {% if posted.2 == "DRIVE" %}selected='selected'{% endif %} value="DRIVE">DRIVE</option>
@@ -82,13 +81,14 @@ $(function () {
 			</select>
 		</label>
 		
-		<label for="tracking_points">Tracking points:
-		<input id="tracking_points" name="tracking_points" class='mini' type="text" value="{{posted.3}}" />
+		<label for="tracking_points">Track:
+		<input id="tracking_points" name="tracking_points" class='mini form-control' type="text" value="{{posted.3}}" />
 		</label>
 		
-		<input type="submit" class="btn btn-success">
+		<input type="submit" class="btn btn-success margintop20">
 </form>
-	
+
+	<br />
 <hr />
 	
 <div id="container"></div>		

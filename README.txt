@@ -1,3 +1,6 @@
+# Trello api basics
+http://www.trello.org/help.html
+
 # take a look
 https://github.com/omab/django-social-auth/blob/master/social_auth/backends/contrib/trello.py
 

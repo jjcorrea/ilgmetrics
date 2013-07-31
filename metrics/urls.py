@@ -19,7 +19,7 @@ urlpatterns = patterns('',
     url(r'^done/$', 'metrics.views.gui.done_page', name='done'),
     
     url(r'^cfd_chart/$', 'metrics.views.gui.cfd_chart_page', name='cfd_chart_page'),
-    url(r'^story_metrics/$', 'metrics.views.gui.story_metrics_page', name='story_metrics_page'),
+    url(r'^dashboard/$', 'metrics.views.gui.dashboard', name='dashboard'),
 
 
     url(r'^api/snapshots/(?P<category>\w{0,50})/$', 'metrics.views.api.api_snapshots', name='api_snapshots'),

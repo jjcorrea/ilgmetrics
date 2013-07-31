@@ -1,0 +1,79 @@
+{% load custom_tags %}
+
+{% if search_results.state == 'default' %}
+	<form method="get" action="." class='horizontal' id='kanban_search_form'>
+		<ul class="nav nav-tabs">
+		  <li class="active" target="search">
+		    <a href="#">Search</a>
+		  </li>
+		  <li target="compare"><a href="#">Compare</a></li>
+		  <li target="export"><a href="#">Export</a></li>
+		</ul>
+		
+		<div id="search">
+			<br />
+
+			<label for="sdt">Start date:
+				<input id="sdt" name="sdt" type="text" class="form-control datepick" value="{{posted.0}}" />
+			</label>
+			
+			<label for="edt">End date:
+				<input id="edt" name="edt" type="text" class="form-control datepick"  value="{{posted.1}}" />
+			</label>
+			
+			<label for="team">Team:
+				<select id="team" name="team" class='form-control'>
+					<option value="ALL">ALL</option>
+					<option value="SPARTA">SPARTA</option>
+					<option value="DRIVE">DRIVE</option>
+					<option value="KOALA">KOALA</option>
+					<option value="BARCELONA">BARCELONA</option>
+					<option value="ICATU">ICATU</option>
+					<option value="JOHN_DEERE">JOHN DEERE</option>
+				</select>
+			</label>
+		</div>
+		
+		<div id="compare" class="hidden">
+				<br />
+		
+			<label class="checkbox" for='compare_results'>
+		      <input type="checkbox" id='compare_results'> Compare results
+		    </label>
+		    
+			<br /><br />
+			
+			<label for="compare_sdt">Start date:
+				<input id="compare_sdt" name="compare_sdt" type="text" class="datepick kanban_comparison form-control"  disabled='disabled' value="{{posted.0}}" />
+			</label>
+			
+			<label for="compare_edt">End date:
+				<input id="compare_edt" name="compare_edt" type="text" class="datepick kanban_comparison form-control"  disabled='disabled' value="{{posted.1}}" />
+			</label>
+			
+			<label for="compare_team">Team:
+				<select id="compare_team" name="compare_team" class='kanban_comparison form-control' disabled='disabled'>
+					<option value="ALL">ALL</option>
+					<option value="SPARTA">SPARTA</option>
+					<option value="DRIVE">DRIVE</option>
+					<option value="KOALA">KOALA</option>
+					<option value="BARCELONA">BARCELONA</option>
+					<option value="ICATU">ICATU</option>
+					<option value="JOHN_DEERE">JOHN DEERE</option>
+				</select>
+			</label>
+		</div>
+		
+		<div id="export" class="hidden">
+
+		</div>
+		
+		<input type="submit" class="btn btn-success margintop20">
+		<br />
+</form>
+
+{% elif search_results.state == 'search' %}
+   {% include "commons/kanban-search.html" %}
+{% elif search_results.state == 'comparison' %}
+   {% include "commons/kanban-comparison.html" %}
+{% endif %}

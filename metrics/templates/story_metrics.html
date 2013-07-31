@@ -94,7 +94,72 @@ $(function () {
 {% endblock %}
 
 {% block content %}
-	<div id="stacked"></div>
-	<hr />
 	<div id="workstream"></div>
+
+	<br /><br />
+
+	<div class="panel overall-status">
+	  <div class="panel-heading">Release 13.3 - Overall status</div>
+		<ul class="list-group list-group-flush">
+		    <li class="list-group-item fail">BARCELONA <span class="label label-warning">1 week + 2 days + 4h delay</span></li>
+		    <li class="list-group-item ok">DRIVE</li>
+		    <li class="list-group-item ok">SPARTA</li>
+		    <li class="list-group-item ok">KOALA</li>
+		  </ul>	  
+	</div>
+
+	<br />
+
+	<div class='span4 shiftleft'>
+		<h4 class='text-info text-center'>Story</h4>
+		<table class="table table-condensed table-striped">
+              <thead>
+                <tr>
+                  <th class='centered'>Points</th>
+                  <th class='centered'>Design</th>
+                  <th class='centered'>Test & Code</th>
+                  <th class='centered'>Code Review</th>
+                  <th class='centered'>Block</th>
+                  <th class='centered'>Acceptance</th>
+                </tr>
+              </thead>
+              <tbody>
+				{% for raw_story in global_metrics.story_grid %}
+					<tr>
+					{%for story in raw_story%}
+						<td class='{%if forloop.counter == 1%}story_points{%endif%} centered'>{{story}}</td>
+					{%endfor%}
+					</tr>
+				{% endfor %}
+              </tbody>
+            </table>	
+	</div>
+	
+	<div class='span4'>
+		<h4 class='text-info text-center'>Bug</h4>
+		<table class="table table-condensed table-striped text-center">
+              <thead>
+                <tr>
+                  <th class='centered'>Points</th>
+                  <th class='centered'>Design</th>
+                  <th class='centered'>Test & Code</th>
+                  <th class='centered'>Code Review</th>
+                  <th class='centered'>Block</th>
+                  <th class='centered'>Acceptance</th>
+                </tr>
+              </thead>
+              <tbody>
+				{% for raw_bug in global_metrics.bug_grid %}
+					<tr>
+					{%for bug in raw_bug%}
+						<td class='{%if forloop.counter == 1%}story_points{%endif%} centered'>{{bug}}</td>
+					{%endfor%}
+					</tr>
+				{% endfor %}
+
+              </tbody>
+            </table>	
+	</div>	
+	
+	<br />
 {% endblock %}

@@ -14,6 +14,7 @@ python:
 install: 
 - pip install -q Django==$DJANGO --use-mirrors
 - pip install pep8 --use-mirrors
+- pip install PIL
 - pip install https://github.com/dcramer/pyflakes/tarball/master
 script:
  - wget -qO- https://toolbelt.heroku.com/install-ubuntu.sh | sh

@@ -6,6 +6,7 @@
 {% endblock %}
 
 {% block upper_content %}
+   {% include "commons/kanban-base.html" with status="Done" %}
    <div id="DONE_chart"></div>
    <div id='teams_status'></div>
 {% endblock %}

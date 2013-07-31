@@ -25,4 +25,147 @@ input[type=text],input[type=submit]{
 input[type=text].mini{
 	width:50px
 }
+.container{
+	width:910px!important;
+}
 
+div.micro-table {
+	float:left;
+}
+
+div.micro-table.left{
+	margin-right:35px;
+}
+
+.centered{
+	text-align:center!important;
+}
+td.story_points{
+	background-color:#d9edf7!important;
+}
+
+.span4 table {
+	width:420px;
+	font-size: 12px;
+}
+
+.span4{
+	width:440px!important;
+	float:left;}
+
+.shiftleft{
+	margin-left:15px!important;
+}
+
+#burndown-estimation/*,#backlog-evolution-chart*/, #workstream-share{
+	width:450px;
+	float:left;
+}
+
+br, hr{
+	clear:both
+}
+
+.margintop20{
+	margin-top:20px;
+}
+
+.marginright20{
+	margin-right:20px;
+}
+
+.list-group-item .label, .list-group-item .glyphicon{
+	float: right;
+	margin-right: -15px;
+}
+
+ .list-group-item .glyphicon{
+	font-size:20px;
+ }
+
+#kanban_search_result .panel{
+	float:left;
+}
+
+#kanban_search_result .list-group.mini{
+	width:428px;
+	float:left;
+}
+
+li.team-members{
+	padding-bottom:40px;
+}
+.team-member{
+	width:50px;
+	float:right;
+	margin-left: 5px;
+	
+}
+
+#kanban_search_result.comparison .list-group.half{
+	width:428px;
+	float:left;
+}
+
+#kanban_search_result.comparison ul.team-summary{
+	font-size:13px;
+}
+
+.won{
+	background-color:#D3F1D3
+}
+
+.draw{
+	background-color:#F5F2B2
+}
+
+
+.lost{
+	background-color:#F3E2E2;
+	/*text-decoration:line-through;*/
+	color:silver;
+}
+
+.overall-status .ok{
+	color:#468847;
+	background-color:#dff0d8;
+}
+
+.overall-status ul{
+	margin-top:-16px
+}
+
+.panel-heading .try-another-search{
+	margin-top:3px;
+}
+
+.try-another-search{
+	float:right;
+	font-size:14px;
+	font-weight: normal;
+}
+
+.overall-status .fail{
+	color:#c09853;
+	background-color:#fcf8e3;
+}
+
+.comparison .list-group-item{
+	/*float:left;*/
+}
+
+.marginright8{
+	margin-right:8px;
+}
+
+.comparison .span4{
+	width:395px!important
+}
+.comparison .span4 table {	
+	width: 395px;
+	font-size: 12px;
+}
+
+.comparison #burndown-estimation{
+	width:100%!important;
+}

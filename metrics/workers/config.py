@@ -3,7 +3,7 @@
 #https://trello.com/1/connect?key=5c212aec85d915429623d7dc30c7c412&name=Metrics&response_type=token&scope=read,write
 TRELLO_CREDENTIALS = {
    'api_key' : '5c212aec85d915429623d7dc30c7c412',
-   'token'   : '21cf8cce13ac934951aa361bf9719e70879e2f758130a6a4e9d9e27d8ba2e511',
+   'token'   : '1ba163f5c21241ab839c911b3cf932a7fc616993406cb681a0ada2e7f20452b9',
 }
 
 MONGO_CONNECTION_STRING = 'mongodb://ilgdev:ilgdev@dharma.mongohq.com:10094/metrics'

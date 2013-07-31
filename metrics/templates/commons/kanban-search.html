@@ -1,0 +1,276 @@
+<script>
+$(document).ready(function(){
+
+    $('#burndown-estimation').highcharts({
+    	 chart: {
+             type: 'area'
+         },
+         title: {
+             text: 'Burndown estimation'
+         },
+         xAxis: {
+             categories: ['22/05/13','01/06/13', '20/06/13', '30/06/13', '10/07/13'],
+             tickmarkPlacement: 'on',
+             title: {
+                 enabled: false
+             }
+         },
+         yAxis: {
+             title: {
+                 text: 'Stories / Bugs'
+             },
+             labels: {
+                 formatter: function() {
+                     return this.value;
+                 }
+             }
+         },
+         tooltip: {
+             shared: true,
+             valueSuffix: ' millions'
+         },
+         plotOptions: {
+             area: {
+                 stacking: 'normal',
+                 lineColor: '#666666',
+                 lineWidth: 1,
+                 marker: {
+                     lineWidth: 1,
+                     lineColor: '#666666'
+                 }
+             }
+         },
+        series: [{
+            name: '{{status}}',
+            data: [300, 200, 100, 50, 0]
+        }]
+    });	
+	
+	$('#evolution-chart').highcharts({
+	       chart: {
+               type: 'line',
+               marginRight: 130,
+               marginBottom: 25
+           },
+           title: {
+               text: '{{status}} Evolution',
+               x: -20 //center
+           },
+           xAxis: {
+               categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
+                   'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
+           },
+           yAxis: {
+               title: {
+                   text: 'Bugs / Stories'
+               },
+               plotLines: [{
+                   value: 0,
+                   width: 1,
+                   color: '#808080'
+               }]
+           },
+           tooltip: {
+               valueSuffix: 'items'
+           },
+           legend: {
+               layout: 'vertical',
+               align: 'right',
+               verticalAlign: 'top',
+               x: -10,
+               y: 100,
+               borderWidth: 0
+           },
+           series: [{
+               name: '{{status}}',
+               data: [7.0, 6.9, 9.5, 14.5, 18.2, 21.5, 25.2, 26.5, 23.3, 18.3, 13.9, 9.6]
+           }]
+	});	
+	
+	
+   	// workstream share
+    $('#workstream-share').highcharts({
+        chart: {
+            plotBackgroundColor: null,
+            plotBorderWidth: null,
+            plotShadow: false
+        },
+        title: {
+            text: 'Workstream Share'
+        },
+        tooltip: {
+    	    pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+        },
+        plotOptions: {
+            pie: {
+                allowPointSelect: true,
+                cursor: 'pointer',
+                dataLabels: {
+                    enabled: false
+                },
+                showInLegend: true
+            }
+       	},
+        series: [{
+            type: 'pie',
+            name: 'Workstream share',
+            data: [
+					
+					['Search', 36],
+				
+					['Retrieve', 35],
+				
+					['Alert', 23],
+				
+					['Export', 42],
+				
+					['Ontology', 11],
+				
+           ]
+        }]
+    });	
+});
+</script>
+<div id="kanban_search_result">
+	
+	<div class='well well-small'>
+		<b>Start date</b>: {{search_results.sdt}}
+		&nbsp;&nbsp;
+		<b>End date</b>: {{search_results.edt}}
+		&nbsp;&nbsp;
+		<b>Team</b>: {{search_results.team}}
+		
+		<a style='float:right' href='/todo/'>Try another search</a>
+	</div>
+	
+	<div class='panel'>
+		<div class='panel-heading'><b>Results Summary</b></div>
+
+		<ul class="list-group">
+		  <li class="list-group-item team-members">{{search_results.team}} Members: 
+		  
+			{% for member in search_results.members %}
+			    <img class='team-member' src='/static/uploads/{{member.image.name|slice:"38::"}}' alt='{{member.name}}' title='{{member.name}}' />
+			{% endfor %}
+		</ul>		
+
+		<ul class="list-group mini marginright20">
+		  <li class="list-group-item">Total Story Points <span class="badge badge-warning">0</span></li>
+		  <li class="list-group-item">Delivery estimation <span class="badge badge-info">2d 4h 40min</span></li>
+		  <li class="list-group-item">Weekly Throughput <span class="badge badge-info">8</span></li>
+		</ul>
+		
+		<ul class="list-group mini">
+		  <li class="list-group-item">Current status <span class="label label-danger">2 days Delayed</span></li>
+		  <li class="list-group-item">Previous week variation <span class="label label-success">3 more items</span></li>
+		  <li class="list-group-item">Month variation <span class="label label-success">+ 8</span></li>
+		</ul>		
+		
+	</div>
+	
+	<br />
+	
+	<div id='workstream-share'></div>
+	<div id='burndown-estimation'></div>
+	
+	<br />
+	<br />
+	
+	<div class='span4 shiftleft'>
+		<h4 class='text-info text-center'>Story</h4>
+		<table class="table table-condensed table-striped">
+              <thead>
+                <tr>
+                  <th class='centered'>Points</th>
+                  <th class='centered'>Design</th>
+                  <th class='centered'>Test & Code</th>
+                  <th class='centered'>Code Review</th>
+                  <th class='centered'>Block</th>
+                  <th class='centered'>Acceptance</th>
+                </tr>
+              </thead>
+              <tbody>
+				{% for raw_story in search_results.story_grid %}
+					<tr>
+					{%for story in raw_story%}
+						<td class='{%if forloop.counter == 1%}story_points{%endif%} centered'>{{story}}</td>
+					{%endfor%}
+					</tr>
+				{% endfor %}
+              </tbody>
+            </table>	
+	</div>
+	
+	<div class='span4'>
+		<h4 class='text-info text-center'>Bug</h4>
+		<table class="table table-condensed table-striped text-center">
+              <thead>
+                <tr>
+                  <th class='centered'>Points</th>
+                  <th class='centered'>Design</th>
+                  <th class='centered'>Test & Code</th>
+                  <th class='centered'>Code Review</th>
+                  <th class='centered'>Block</th>
+                  <th class='centered'>Acceptance</th>
+                </tr>
+              </thead>
+              <tbody>
+				{% for raw_bug in search_results.bug_grid %}
+					<tr>
+					{%for bug in raw_bug%}
+						<td class='{%if forloop.counter == 1%}story_points{%endif%} centered'>{{bug}}</td>
+					{%endfor%}
+					</tr>
+				{% endfor %}
+
+              </tbody>
+            </table>	
+	</div>
+
+	<br />
+	<br />
+	
+	<div id='evolution-chart'></div>
+	
+	<br />
+
+	<ul class="nav nav-tabs">
+	  <li class='active' target="stories-raw-table">
+	  	<a href="#">Stories &nbsp;<span class="badge pull-right">10</span></a>
+	  </li>
+	  <li target="bugs-raw-table">
+	  	<a href="#">Real Bugs &nbsp;<span class="badge badge-important">0</span></a>
+	  </li>
+	  <li target="bugs-raw-table">
+	  	<a href="#">Invalid Bugs &nbsp;<span class="badge">0</span></a>
+	  </li>
+	</ul>
+
+	<div id='stories-raw-table'>
+		<table class="table table-striped">
+              <thead>
+                <tr>
+                  <th class='span9'>Title</th>
+                  <th class='span2'>Services</th>
+                  <th class='span1 centered'>Points</th>
+                </tr>
+              </thead>
+              <tbody>
+					{% for story in search_results.documents %}
+							<td>
+								{{story.title|truncatechars:75}}
+							</td>
+							<td>
+								{{ story.services|join:', ' }}
+							</td>
+							<td class='centered'>
+								{%if story.points%}{{story.points}}{%else%}0{%endif%}
+							</td>
+		                </tr>
+					{% endfor %}
+              </tbody>
+            </table>		
+	
+	</div>
+	
+</div>
