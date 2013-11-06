@@ -72,17 +72,20 @@ def done_page(request):
 
 def cfd_chart_page(request):
     graph_data = []
+    compare_graph_data = []
     
     st_in = ''
     en_in = ''
     tm_in = ''
     tp_in = ''
+    compare_team_in = ''
     
     if request.method == 'POST':
         st_in = request.POST['start_datepick']
         en_in = request.POST['end_datepick']
         tm_in = request.POST['team']
         tp_in = request.POST['tracking_points']
+        compare_team_in = request.POST['compare_team']
         
         with PyMongoClient() as mongo:
             if (not st_in) or (not en_in):
@@ -118,11 +121,33 @@ def cfd_chart_page(request):
                 total_backlog_list.append(len(backlog_rs))
                 total_in_progress_list.append(len(in_progress_raw_rs))
                 total_done_list.append(len(done_raw_rs))
-                            
+                
             graph_data = (total_backlog_list, total_in_progress_list, total_done_list, [d.strftime("%d/%m/%Y %H:%M") for d in date_ranges])
-
-    posted_data = (st_in,en_in,tm_in,tp_in)
-    return render_to_response('cfd_chart.html', {'graph_data':graph_data, 'posted':posted_data}, context_instance=RequestContext(request))
+                
+            if request.POST.has_key('compare_results'):
+                # counter lists
+                compare_total_backlog_list = []
+                compare_total_in_progress_list = []
+                compare_total_done_list = []
+        
+                # seek for previous card status
+                for idx, date in enumerate(date_ranges):
+                    next_date_expected_index = idx+1
+                    next_date_index = next_date_expected_index if len(date_ranges)>next_date_expected_index else len(date_ranges)-1
+                    range_end = date_ranges[next_date_index]
+                    
+                    done_raw_rs = find_unique_stories('DONE', [], range_end, tm_in)
+                    in_progress_raw_rs = find_unique_stories('IN_PROGRESS', done_raw_rs, range_end, tm_in)
+                    backlog_rs = find_unique_stories('BACKLOG', done_raw_rs + in_progress_raw_rs, range_end, tm_in)
+        
+                    compare_total_backlog_list.append(len(backlog_rs))
+                    compare_total_in_progress_list.append(len(in_progress_raw_rs))
+                    compare_total_done_list.append(len(done_raw_rs))
+                    
+                compare_graph_data = (compare_total_backlog_list, compare_total_in_progress_list, compare_total_done_list, [d.strftime("%d/%m/%Y %H:%M") for d in date_ranges])
+    
+    posted_data = (st_in,en_in,tm_in,tp_in,request.POST.has_key('compare_results'), compare_team_in)
+    return render_to_response('cfd_chart.html', {'graph_data':graph_data, 'compare_graph_data': compare_graph_data, 'posted':posted_data, 'team_in': tm_in, 'compare_team_in': compare_team_in}, context_instance=RequestContext(request))
 
 def dashboard(request):
     global_metrics = {}

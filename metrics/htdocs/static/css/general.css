@@ -127,8 +127,8 @@ li.team-members{
 }
 
 .overall-status .ok{
-	color:#468847;
-	background-color:#dff0d8;
+	color:white;
+	background-color:green;
 }
 
 .overall-status ul{
@@ -146,8 +146,8 @@ li.team-members{
 }
 
 .overall-status .fail{
-	color:#c09853;
-	background-color:#fcf8e3;
+	color:white;
+	background-color:red;
 }
 
 .comparison .list-group-item{
