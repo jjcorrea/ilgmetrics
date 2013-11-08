@@ -25,12 +25,11 @@ class SnapshotWorker(object):
     def get_single_card(self, id):
         return self.trello_extended_connection.get_card(id)
 
-    def is_status_updated(self, story, title, current_status):
-        story_statuses_ordered = self.db.snapshots.find({'story' : story, 'title' : title}).sort([('date_in', -1)])
+    def is_status_updated(self, card, story, title, current_status):
+        story_statuses_ordered = self.db.snapshots.find({'card_id' : card, 'status' : current_status}).sort([('date_in', -1)])
         if story_statuses_ordered.count()>0:
             last_db_reg = story_statuses_ordered[0]
             last_db_status = last_db_reg.get('status')
-            last_db_dt = last_db_reg.get('date_in')
             return last_db_status != current_status
         return True
 
@@ -46,7 +45,8 @@ class SnapshotWorker(object):
         self.db = None
 
 while True:
-    try:
+    #try:
+    if True:
         with SnapshotWorker() as worker, Logger() as logger:
             for (team, board) in config.TEAM_BOARD_MAP.iteritems():
                 logger.info("["+now()+"] PREPARING "+team+" SNAPSHOT")
@@ -75,7 +75,7 @@ while True:
                             if (title.lower() not in config.TRELLO_CARD_IGNORE):
                                 story = str(extract_task_identifier(card_extended.desc))
                                 
-                                if worker.is_status_updated(story, title, status): 
+                                if worker.is_status_updated(card.id, story, title, status): 
                                     mongo_in = {
                                         'card_id':card.id,
                                         'card_url': card_extended.url,
@@ -98,8 +98,8 @@ while True:
                 worker.db.snapshots.map_reduce(map, reduce, 'snapshots_reduced_story_statuses')                                    
         
                 logger.info("["+now()+"] FINISHED TEAM PROCESSING.")
-    except:
-        pass
+    #except:
+    #    pass
     
     logger.info("["+now()+"] WILL SLEEP %s SECONDS" % (config.SNAPSHOT_INTERVAL))
     sleep(config.SNAPSHOT_INTERVAL)        

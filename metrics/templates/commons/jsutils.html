@@ -1,5 +1,6 @@
 <script type="text/javascript">
 
+
 function run_charts(teams){
     alert = [];
     autocomplete=[];
@@ -183,8 +184,44 @@ function run_charts(teams){
     });							
 }
 
-
-
+$(document).ready(function(){
+	// navigation init script
+	var syncNavElements = function(hideAll){
+		filter = '';
+		if(!hideAll){
+			filter = ':not(.active)';
+		}
+		
+		$('.nav').children('li'+filter).each(function(){
+			$('#'+$(this).attr('target')).addClass('hidden').hide();
+		});
+	}
+	
+	syncNavElements(false);
+	
+	// navigation rules
+	$('.nav').children('li').on('click', function(){
+		// avoid sup menu to be considered
+		if($(this).parent().parent('.navbar').size()==0){
+			syncNavElements(true);
+			//$('#search,#export,#compare').addClass('hidden').hide();
+			$(this).parent().find('.active').removeClass('active');
+			$('#'+$(this).attr('target')).show().removeClass('hidden');
+			$(this).addClass('active');
+			return false;
+		}
+	});
+	
+	$('#compare_results').on('change', function(){
+		if($(this).is(':checked')){
+			$('.kanban_comparison').removeAttr('disabled');
+		}else{
+			$('.kanban_comparison').attr('disabled','disabled');
+		}
+	});
+	
+});
+/*
 $(function () {	
 	$( ".tabs" ).tabs();
 	
@@ -261,7 +298,7 @@ $(function () {
 	});
 	
 });
-
+*/
 </script>
 
 

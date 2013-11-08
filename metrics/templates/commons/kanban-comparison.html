@@ -1,0 +1,177 @@
+
+
+<div id="kanban_search_result" class='comparison'>
+	
+	<div class='panel'>
+		<div class='panel-heading'><b>Comparison summary</b><a class='try-another-search' href="/todo/">Try another search</a></div>
+
+		<ul class="list-group half marginright20 team-summary">
+			<li class='list-group-item'>
+				<b>Start date</b>: {{search_results.sdt}}
+				&nbsp;&nbsp;
+				<b>End date</b>: {{search_results.edt}}
+				&nbsp;&nbsp;
+				<b>Team</b>: {{search_results.team}}
+			</li>
+		
+		  <li class="list-group-item team-members">{{search_results.team}} Members: 
+			{% for member in search_results.members %}
+			    <img class='team-member' src='/static/uploads/{{member.image.name|slice:"38::"}}' alt='{{member.name}}' title='{{member.name}}' />
+			{% endfor %}
+			
+			</li>
+		</ul>		
+		
+		<ul class="list-group half team-summary">
+			<li class='list-group-item'>
+				<b>Start date</b>: {{search_results.csdt}}
+				&nbsp;&nbsp;
+				<b>End date</b>: {{search_results.cedt}}
+				&nbsp;&nbsp;
+				<b>Team</b>: {{search_results.cteam}}
+			</li>
+		
+		  <li class="list-group-item team-members">{{search_results.team}} Members: 
+		  
+			{% for member in search_results.members %}
+			    <img class='team-member' src='/static/uploads/{{member.image.name|slice:"38::"}}' alt='{{member.name}}' title='{{member.name}}' />
+			{% endfor %}
+			</li>
+		</ul>				
+
+		<ul class="list-group mini marginright20">
+		  <li class="list-group-item won">Total Story Points <span class="badge badge-warning">28</span></li>
+		  <li class="list-group-item won">Delivery estimation <span class="badge badge-info">1d +1h +25min</span></li>
+		  <li class="list-group-item draw">Weekly Throughput <span class="badge badge-info">8</span></li>
+			<li class="list-group-item won">
+			<div class='span4'>
+				<h4 class='text-info text-center'>Story</h4>
+				<table class="table table-condensed">
+		              <thead>
+		                <tr>
+		                  <th class='centered'>Points</th>
+		                  <th class='centered'>Design</th>
+		                  <th class='centered'>Test & Code</th>
+		                  <th class='centered'>Code Review</th>
+		                  <th class='centered'>Block</th>
+		                  <th class='centered'>Acceptance</th>
+		                </tr>
+		              </thead>
+		              <tbody>
+						{% for raw_story in search_results.story_grid %}
+							<tr>
+							{%for story in raw_story%}
+								<td class='centered'>{{story}}</td>
+							{%endfor%}
+							</tr>
+						{% endfor %}
+		              </tbody>
+		            </table>	
+				</div>
+				<br />
+			</li>		  
+	
+			<li class="list-group-item won">
+		
+				<div class='span4'>
+					<h4 class='text-info text-center'>Bug</h4>
+					<table class="table table-condensed text-center">
+			              <thead>
+			                <tr>
+			                  <th class='centered'>Points</th>
+			                  <th class='centered'>Design</th>
+			                  <th class='centered'>Test & Code</th>
+			                  <th class='centered'>Code Review</th>
+			                  <th class='centered'>Block</th>
+			                  <th class='centered'>Acceptance</th>
+			                </tr>
+			              </thead>
+			              <tbody>
+							{% for raw_bug in search_results.bug_grid %}
+								<tr>
+								{%for bug in raw_bug%}
+									<td class='centered'>{{bug}}</td>
+								{%endfor%}
+								</tr>
+							{% endfor %}
+			
+			              </tbody>
+			            </table>	
+					</div>
+				<br />
+								
+			</li>
+		</ul>
+		
+		<ul class="list-group mini">
+		  <li class="list-group-item lost">Total Story Points <span class="badge badge-warning">14</span></li>
+		  <li class="list-group-item lost">Delivery estimation <span class="badge badge-info">2d +4h +40min</span></li>
+		  <li class="list-group-item draw">Weekly Throughput <span class="badge badge-info">8</span></li>
+			<li class="list-group-item lost">
+			<div class='span4'>
+				<h4 class='text-info text-center'>Story</h4>
+				<table class="table table-condensed">
+		              <thead>
+		                <tr>
+		                  <th class='centered'>Points</th>
+		                  <th class='centered'>Design</th>
+		                  <th class='centered'>Test & Code</th>
+		                  <th class='centered'>Code Review</th>
+		                  <th class='centered'>Block</th>
+		                  <th class='centered'>Acceptance</th>
+		                </tr>
+		              </thead>
+		              <tbody>
+						{% for raw_story in search_results.story_grid %}
+							<tr>
+							{%for story in raw_story%}
+								<td class='centered'>{{story}}</td>
+							{%endfor%}
+							</tr>
+						{% endfor %}
+		              </tbody>
+		            </table>	
+				</div>
+				<br />
+			</li>		  
+	
+			<li class="list-group-item lost">
+		
+				<div class='span4'>
+					<h4 class='text-info text-center'>Bug</h4>
+					<table class="table table-condensed text-center">
+			              <thead>
+			                <tr>
+			                  <th class='centered'>Points</th>
+			                  <th class='centered'>Design</th>
+			                  <th class='centered'>Test & Code</th>
+			                  <th class='centered'>Code Review</th>
+			                  <th class='centered'>Block</th>
+			                  <th class='centered'>Acceptance</th>
+			                </tr>
+			              </thead>
+			              <tbody>
+							{% for raw_bug in search_results.bug_grid %}
+								<tr>
+								{%for bug in raw_bug%}
+									<td class='centered'>{{bug}}</td>
+								{%endfor%}
+								</tr>
+							{% endfor %}
+			
+			              </tbody>
+			            </table>	
+					</div>
+				<br />
+								
+			</li>		  
+		</ul>		
+		
+	</div>
+	
+	<br />
+	
+	<div id='burndown-estimation'></div>
+	
+
+</div>

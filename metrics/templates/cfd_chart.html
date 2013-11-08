@@ -3,7 +3,6 @@
 {% block extrahead %}
 <script type="text/javascript">
 $(function () {
-	$('.datepick').datepicker({ dateFormat: "dd/mm/yy" });
 		$('#container').highcharts({
 	          chart: {
 	              type: 'area'
@@ -32,7 +31,7 @@ $(function () {
 	          },
 	          plotOptions: {
 	              area: {
-	                  stacking: 'percent',
+	            	  stacking: 'normal',
 	                  lineColor: '#ffffff',
 	                  lineWidth: 1,
 	                  marker: {
@@ -50,7 +49,20 @@ $(function () {
 	          }, {
 	              name: 'Done',
 	              data: {% firstof graph_data.2 '[]' %}
-	          }]
+	          }
+	          {%if compare_graph_data %} 
+		          ,{
+		              name: 'To do - Compare',
+		              data: {% firstof compare_graph_data.0 '[]' %}
+		          }, {
+		              name: 'In progress - Compare',
+		              data: {% firstof compare_graph_data.1 '[]' %}
+		          }, {
+		              name: 'Done - Compare',
+		              data: {% firstof compare_graph_data.2 '[]' %}
+		          }
+	          {% endif %}
+	          ]
 	      });        
     });
     
@@ -58,20 +70,19 @@ $(function () {
 {% endblock %}
 
 {% block upper_content %}
-
-<form method="post" action="." class='horizontal'>
+<form method="post" action="." class='horizontal' >
 		{% csrf_token %}
 		
 		<label for="start_datepick">Start date:
-		<input id="start_datepick" name="start_datepick" type="text" class="datepick" value="{{posted.0}}" />
+		<input id="start_datepick" name="start_datepick" type="text" class="datepick form-control" value="{{posted.0}}" />
 		</label>
 		
 		<label for="end_datepick">End date:
-		<input id="end_datepick" name="end_datepick" type="text" class="datepick"  value="{{posted.1}}" />
+		<input id="end_datepick" name="end_datepick" type="text" class="datepick form-control"  value="{{posted.1}}" />
 		</label>
 		
 		<label for="team">Team:
-			<select id="team" name="team">
+			<select id="team" name="team" class='form-control'>
 				<option {% if posted.2 == "ALL" %}selected='selected'{% endif %} value="ALL">ALL</option>
 				<option {% if posted.2 == "SPARTA" %}selected='selected'{% endif %} value="SPARTA">SPARTA</option>
 				<option {% if posted.2 == "DRIVE" %}selected='selected'{% endif %} value="DRIVE">DRIVE</option>
@@ -82,13 +93,35 @@ $(function () {
 			</select>
 		</label>
 		
-		<label for="tracking_points">Tracking points:
-		<input id="tracking_points" name="tracking_points" class='mini' type="text" value="{{posted.3}}" />
+		<label for="tracking_points">Track:
+		<input id="tracking_points" name="tracking_points" class='mini form-control' type="text" value="{{posted.3}}" />
 		</label>
 		
-		<input type="submit" class="btn btn-success">
+		<input type="submit" class="btn btn-success margintop20">
+		
+		<br />
+		<label class="checkbox" for='compare_results'>
+			<input type="checkbox" value="{{posted.5}}" name="compare_results" id='compare_results' onclick="if($('#compare').is(':visible')){ $('#compare').hide();}else $('#compare').show();"> Compare results
+		</label>
+		<br />
+		
+		<div id="compare" style="display:none;">
+			<br />
+			<label for="compare_team">Team:
+				<select id="compare_team" name="compare_team" class='kanban_comparison form-control'>
+					<option {% if posted.4 == "ALL" %}selected='selected'{% endif %} value="ALL">ALL</option>
+					<option {% if posted.4 == "SPARTA" %}selected='selected'{% endif %} value="SPARTA">SPARTA</option>
+					<option {% if posted.4 == "DRIVE" %}selected='selected'{% endif %} value="DRIVE">DRIVE</option>
+					<option {% if posted.4 == "KOALA" %}selected='selected'{% endif %} value="KOALA">KOALA</option>
+					<option {% if posted.4 == "BARCELONA" %}selected='selected'{% endif %} value="BARCELONA">BARCELONA</option>
+					<option {% if posted.4 == "ICATU" %}selected='selected'{% endif %} value="ICATU">ICATU</option>
+					<option {% if posted.4 == "JOHN_DEERE" %}selected='selected'{% endif %} value="JOHN_DEERE">JOHN DEERE</option>
+				</select>
+			</label>
+		</div>
 </form>
-	
+
+	<br />
 <hr />
 	
 <div id="container"></div>		

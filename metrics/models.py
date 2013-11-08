@@ -28,9 +28,19 @@ class Team(models.Model):
     def __str__(self):
         return self.team_name
     
-class Sprint(models.Model):
-    team = models.ForeignKey('Team')
-    sprint_name = models.CharField(max_length=30)
+class Release(models.Model):
+    teams = models.ManyToManyField('Team')
+    name = models.CharField(max_length=250)
+    start = models.DateField()
+    end = models.DateField()
     
     def __str__(self):
-        return '%s - %s' % (self.team, self.sprint_name)
+        return self.name
+
+class TeamMember(models.Model):
+    team = models.ForeignKey('Team')
+    name =  models.CharField(max_length=100)
+    image = models.ImageField(upload_to='metrics/metrics/htdocs/static/uploads/')
+
+    def __str__(self):
+        return self.name

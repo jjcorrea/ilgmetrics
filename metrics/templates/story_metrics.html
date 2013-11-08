@@ -87,14 +87,270 @@ $(function () {
 	            ]
 	        }]
 	    });
-	
+	    	
+	    	$('#burndown-estimation-bcn').highcharts({
+	    	       chart: {
+	                   type: 'line',
+	                   marginRight: 130,
+	                   marginBottom: 25
+	               },
+	               title: {
+	                   text: 'Burndown Estimation Barcelona',
+	                   x: -20 //center
+	               },
+	               xAxis: {
+	            	   categories: ['01/Out', '08/Out', '15/Out', '22/Out', '29/Out', '06/Nov',
+	     	                       '13/Nov', '20/Nov', '27/Nov', '03/Dez', '10/Dez', '17/Dez']
+	               },
+	               yAxis: {
+	                   title: {
+	                       text: 'Bugs / Stories'
+	                   },
+	                   plotLines: [{
+	                       value: 0,
+	                       width: 1,
+	                       color: '#808080'
+	                   }]
+	               },
+	               tooltip: {
+	                   valueSuffix: ' items'
+	               },
+	               legend: {
+	                   layout: 'vertical',
+	                   align: 'right',
+	                   verticalAlign: 'top',
+	                   x: -10,
+	                   y: 100,
+	                   borderWidth: 0
+	               },
+	               series: [{
+	                   name: 'Done',
+	                   data: [88, 80, 72.5, 64.5, 31.2, 21.5, 20.2, 11.5, 2, 0, 0, 0]
+	               },
+	               {
+	                   name: 'Ideal',
+	                   data: [88, 80, 72, 64, 56, 48, 40, 32, 24, 16, 8, 0]
+	               }]
+	    	});	
+	    	$('#burndown-estimation-drive').highcharts({
+	    	       chart: {
+	                   type: 'line',
+	                   marginRight: 130,
+	                   marginBottom: 25
+	               },
+	               title: {
+	                   text: 'Burndown Estimation Drive',
+	                   x: -20 //center
+	               },
+	               xAxis: {
+	            	   categories: ['01/Out', '08/Out', '15/Out', '22/Out', '29/Out', '06/Nov',
+	     	                       '13/Nov', '20/Nov', '27/Nov', '03/Dez', '10/Dez', '17/Dez']
+	               },
+	               yAxis: {
+	                   title: {
+	                       text: 'Bugs / Stories'
+	                   },
+	                   plotLines: [{
+	                       value: 0,
+	                       width: 1,
+	                       color: '#808080'
+	                   }]
+	               },
+	               tooltip: {
+	                   valueSuffix: ' items'
+	               },
+	               legend: {
+	                   layout: 'vertical',
+	                   align: 'right',
+	                   verticalAlign: 'top',
+	                   x: -10,
+	                   y: 100,
+	                   borderWidth: 0
+	               },
+	               series: [{
+	                   name: 'Done',
+	                   data: [44, 44, 40, 39, 37, 30, 26, 20, 10, 8, 2, 0]
+	               },
+	               {
+	                   name: 'Ideal',
+	                   data: [44, 40, 36, 32, 28, 24, 20, 16, 12, 8, 4, 0]
+	               }]
+	    	});	
+	    	$('#burndown-estimation-sparta').highcharts({
+	    	       chart: {
+	                   type: 'line',
+	                   marginRight: 130,
+	                   marginBottom: 25
+	               },
+	               title: {
+	                   text: 'Burndown Estimation Sparta',
+	                   x: -20 //center
+	               },
+	               xAxis: {
+	            	   categories: ['01/Out', '08/Out', '15/Out', '22/Out', '29/Out', '06/Nov',
+	     	                       '13/Nov', '20/Nov', '27/Nov', '03/Dez', '10/Dez', '17/Dez']
+	               },
+	               yAxis: {
+	                   title: {
+	                       text: 'Bugs / Stories'
+	                   },
+	                   plotLines: [{
+	                       value: 0,
+	                       width: 1,
+	                       color: '#808080'
+	                   }]
+	               },
+	               tooltip: {
+	                   valueSuffix: ' items'
+	               },
+	               legend: {
+	                   layout: 'vertical',
+	                   align: 'right',
+	                   verticalAlign: 'top',
+	                   x: -10,
+	                   y: 110,
+	                   borderWidth: 0
+	               },
+	               series: [{
+	                   name: 'Done',
+	                   data: [110, 108, 100, 80, 76, 70, 60, 55, 30, 25, 12, 5]
+	               },
+	               {
+	                   name: 'Ideal',
+	                   data: [110, 100, 90, 80, 70, 60, 50, 40, 30, 20, 10, 0]
+	               }]
+	    	});	
+	    	$('#burndown-estimation-koala').highcharts({
+	    	       chart: {
+	                   type: 'line',
+	                   marginRight: 130,
+	                   marginBottom: 25
+	               },
+	               title: {
+	                   text: 'Burndown Estimation Koala',
+	                   x: -20 //center
+	               },
+	               xAxis: {
+	                   categories: ['01/Out', '08/Out', '15/Out', '22/Out', '29/Out', '06/Nov',
+	                       '13/Nov', '20/Nov', '27/Nov', '03/Dez', '10/Dez', '17/Dez']
+	               },
+	               yAxis: {
+	                   title: {
+	                       text: 'Bugs / Stories'
+	                   },
+	                   plotLines: [{
+	                       value: 0,
+	                       width: 1,
+	                       color: '#808080'
+	                   }]
+	               },
+	               tooltip: {
+	                   valueSuffix: ' items'
+	               },
+	               legend: {
+	                   layout: 'vertical',
+	                   align: 'right',
+	                   verticalAlign: 'top',
+	                   x: -10,
+	                   y: 100,
+	                   borderWidth: 0
+	               },
+	               series: [{
+	                   name: 'Done',
+	                   data: [88, 76, 69, 69, 60, 41.5, 20.2, 19.5, 10, 0, 0, 0]
+	               },
+	               {
+	                   name: 'Ideal',
+	                   data: [88, 80, 72, 64, 56, 48, 40, 32, 24, 16, 8, 0]
+	               }]
+	    	});	
+	    	
+	    	
 	
 });
 </script>
 {% endblock %}
 
 {% block content %}
-	<div id="stacked"></div>
-	<hr />
 	<div id="workstream"></div>
+
+	<br /><br />
+
+	<div class="panel overall-status">
+	  <div class="panel-heading">Release 13.3 - Overall status</div>
+		<ul class="list-group list-group-flush">
+		    <li class="list-group-item fail">BARCELONA <span class="label label-warning">1 week + 2 days + 4h delay</span></li>
+		    <li class="list-group-item ok">DRIVE <span class="label label-info">2 days ahead</span></li>
+		    <li class="list-group-item ok">SPARTA <span class="label label-info">5 days + 1h ahead</span></li>
+		    <li class="list-group-item ok">KOALA <span class="label label-info">6h ahead</span></li>
+		  </ul>	  
+	</div>
+	
+	<div class="panel">
+	  <div class="panel-heading">Information</div>
+		<ul class="list-group mini">
+		  <li class="list-group-item">WIP Itens<span class="badge badge-info">5</span></li>
+		  <li class="list-group-item">Average Lead Time<span class="badge badge-info">8h</span></li>
+		</ul>
+	</div>
+
+	<br />
+	<div id='burndown-estimation-bcn'></div>
+	<div id='burndown-estimation-drive'></div>
+	<div id='burndown-estimation-sparta'></div>
+	<div id='burndown-estimation-koala'></div>
+	<br />
+	
+	<div class='span4 shiftleft'>
+		<h4 class='text-info text-center'>Story</h4>
+		<table class="table table-condensed table-striped">
+              <thead>
+                <tr>
+                  <th class='centered'>Points</th>
+                  <th class='centered'>Design</th>
+                  <th class='centered'>Test & Code</th>
+                  <th class='centered'>Code Review</th>
+                  <th class='centered'>Block</th>
+                  <th class='centered'>Acceptance</th>
+                </tr>
+              </thead>
+              <tbody>
+				{% for raw_story in global_metrics.story_grid %}
+					<tr>
+					{%for story in raw_story%}
+						<td class='{%if forloop.counter == 1%}story_points{%endif%} centered'>{{story}}</td>
+					{%endfor%}
+					</tr>
+				{% endfor %}
+              </tbody>
+            </table>	
+	</div>
+	
+	<div class='span4'>
+		<h4 class='text-info text-center'>Bug</h4>
+		<table class="table table-condensed table-striped text-center">
+              <thead>
+                <tr>
+                  <th class='centered'>Points</th>
+                  <th class='centered'>Design</th>
+                  <th class='centered'>Test & Code</th>
+                  <th class='centered'>Code Review</th>
+                  <th class='centered'>Block</th>
+                  <th class='centered'>Acceptance</th>
+                </tr>
+              </thead>
+              <tbody>
+				{% for raw_bug in global_metrics.bug_grid %}
+					<tr>
+					{%for bug in raw_bug%}
+						<td class='{%if forloop.counter == 1%}story_points{%endif%} centered'>{{bug}}</td>
+					{%endfor%}
+					</tr>
+				{% endfor %}
+
+              </tbody>
+            </table>	
+	</div>	
+	
+	<br />
 {% endblock %}

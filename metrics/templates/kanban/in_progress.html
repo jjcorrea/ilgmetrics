@@ -2,10 +2,10 @@
 
 {% block extrahead %}
 	{% include "commons/jsutils.html" with status="IN_PROGRESS" %}
-
 {% endblock %}
 
 {% block upper_content %}
+   {% include "commons/kanban-base.html" with status="In Progress" %}
    <div id="IN_PROGRESS_chart"></div>
    <div id='teams_status'></div>
 {% endblock %}
