@@ -40,8 +40,6 @@ def prepare_stories_output(snapshots, snapshots_reduced, team, global_status):
     # GET the id list of all the specific SNAPSHOTs
     ids = []
     for title, status in title_and_last_status_list:
-        print 'looking for [title] %s' % title
-        
         res = next(snapshots.find({'title':title, 'status':status}), None)
         if res: 
             print('[%s][%s][%s] %s' % (team, status, res['_id'], title))
