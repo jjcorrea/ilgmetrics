@@ -42,7 +42,7 @@ def prepare_stories_output(snapshots, snapshots_reduced, team, global_status):
     for title, status in title_and_last_status_list:
         res = next(snapshots.find({'title':title, 'status':status}), None)
         if res: 
-            print('[%s][%s][%s] %s' % (team, status, res['_id'], title))
+            #print('[%s][%s][%s] %s' % (team, status, res['_id'], title))
             ids.append(res['_id'])
         
     json['documents'] = [build_story_output(story) for story in snapshots.find({'_id':{'$in':ids}}).sort([('date_in', -1)])]
@@ -56,7 +56,7 @@ def extract_last_status(global_status, status_group):
     
     for story_status in reversed(status_list):
          if story_status in all_substatus:
-             print 'will return [%s]' % (story_status)
+             #print 'will return [%s]' % (story_status)
              return story_status
 
 def build_story_output(story):

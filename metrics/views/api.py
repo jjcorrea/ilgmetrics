@@ -43,13 +43,13 @@ def _api_prepare_stories_output(snapshots, snapshots_reduced, team, global_statu
 
 def api_remove_global_status(story_id, global_status):
     with PyMongoClient() as mongo:
-        print 'Removing story STATUS: %s' % story_id
+        #print 'Removing story STATUS: %s' % story_id
         snapshots = mongo.metrics.snapshots
         snapshots.remove({'card_id':story_id, 'status': {'$in':settings.CFD_STATUS_MAP[global_status]}})
         
 def api_remove_story(story_id):
     with PyMongoClient() as mongo:
-        print 'Removing STORY: %s' % story_id
+        #print 'Removing STORY: %s' % story_id
         snapshots = mongo.metrics.snapshots
         snapshots.remove({'card_id':story_id})
 
