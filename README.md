@@ -1,4 +1,4 @@
-Kanban metrics
+ilgmetrics
 ==========
 
-[![Build Status](https://travis-ci.org/jjcorrea/ilgmetrics.png?branch=master)](https://travis-ci.org/jjcorrea/ilgmetrics)
+[![Build Status](https://travis-ci.org/jjcorrea/kanban-metrics.png?branch=master)](https://travis-ci.org/jjcorrea/kanban-metrics)
