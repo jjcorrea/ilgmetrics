@@ -45,8 +45,7 @@ class SnapshotWorker(object):
         self.db = None
 
 while True:
-    #try:
-    if True:
+    try:
         with SnapshotWorker() as worker, Logger() as logger:
             for (team, board) in config.TEAM_BOARD_MAP.iteritems():
                 logger.info("["+now()+"] PREPARING "+team+" SNAPSHOT")
@@ -98,8 +97,8 @@ while True:
                 worker.db.snapshots.map_reduce(map, reduce, 'snapshots_reduced_story_statuses')                                    
         
                 logger.info("["+now()+"] FINISHED TEAM PROCESSING.")
-    #except:
-    #    pass
+    except:
+        pass
     
     logger.info("["+now()+"] WILL SLEEP %s SECONDS" % (config.SNAPSHOT_INTERVAL))
     sleep(config.SNAPSHOT_INTERVAL)        
